@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "D30E3127-77AD-454A-94F5-B29FB7674C52"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "1AE6C9E5-C0F9-45A7-8406-942BC69EDBA8"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSSKit/Sources/LSSKit/HTML/Index/Markers.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "htmlExtractMissionMarkers(from:)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "1AE6C9E5-C0F9-45A7-8406-942BC69EDBA8 - 5741c633e205e10c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (_StringProcessing.Regex&lt;(Swift.Substring, Swift.Substring)&gt;.Match) -&gt; Swift.Optional&lt;LssKit.MissionMarker&gt; in LssKit.htmlExtractMissionMarkers(from: Swift.String) -&gt; Swift.Array&lt;LssKit.MissionMarker&gt;"
+                  moduleName = "McLeitstelle"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/paulober/Developer/McLeitstelle/LSSKit/Sources/LSSKit/HTML/Index/Markers.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "34"
+                  endingLineNumber = "34"
+                  offsetFromSymbolStart = "1500">
+               </Location>
+               <Location
+                  uuid = "1AE6C9E5-C0F9-45A7-8406-942BC69EDBA8 - 5741c633e205e10c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (_StringProcessing.Regex&lt;(Swift.Substring, Swift.Substring)&gt;.Match) -&gt; Swift.Optional&lt;LssKit.MissionMarker&gt; in LssKit.htmlExtractMissionMarkers(from: Swift.String) -&gt; Swift.Array&lt;LssKit.MissionMarker&gt;"
+                  moduleName = "McLeitstelle"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/paulober/Developer/McLeitstelle/LSSKit/Sources/LSSKit/HTML/Index/Markers.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "34"
+                  endingLineNumber = "34"
+                  offsetFromSymbolStart = "1532">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "164FC8E5-4584-4EAF-882C-EEFF864EF5D9"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LSSKit/Sources/LSSKit/HTML/Index/IndexHTML.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
+            landmarkName = "downloadIndexHTML(from:creds:)"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

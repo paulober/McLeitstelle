@@ -11,48 +11,50 @@ import SwiftUI
 
 public struct MissionMarker: Codable, Identifiable, Equatable {
     public let id: Int
-    public let swStartIn: Int?
-    public let sw: Bool?
-    public let tv: Int?
+    public var swStartIn: Int?
+    public var sw: Bool?
+    public var tv: Int?
     /// Id of mission type in einsaetze.json
-    public let missionTypeId: UInt16?
-    public let missionType: String?
-    public let kt: Bool?
-    public let allianceId: Int?
-    public let prisonersCount: Int?
-    public let patientsCount: Int?
-    public let userId: Int?
-    public let address: String
-    public let vehicleState: Int?
-    public let missingText: String?
-    public let missingTextShort: String?
-    public let liveCurrentValue: Int?
-    public let liveCurrentWaterDamagePumpValue: Double?
-    public let waterDamagePumpValue: Int?
-    public let pumpingMissionValue: Int?
-    public let finishUrl: String?
-    public let dateEnd: Int?
-    public let pumpingDateStart: Int?
-    public let pumpingDateEnd: Int?
-    public let dateNow: Date
-    public let longitude: Double
-    public let latitude: Double
-    public let tlng: Double?
-    public let tlat: Double?
-    public let icon: String?
-    public let caption: String
-    public let captionOld: String?
-    public let filterId: String?
-    public let overlayIndex: Int?
-    public let additiveOverlays: String?
-    public let handoff: Bool?
+    public var missionTypeId: UInt16?
+    public var missionType: String?
+    public var kt: Bool?
+    public var allianceId: Int?
+    public var prisonersCount: Int?
+    public var patientsCount: Int?
+    public var userId: Int?
+    public var address: String
+    public var vehicleState: Int?
+    public var missingText: String?
+    public var missingTextShort: String?
+    public var liveCurrentValue: Int?
+    public var liveCurrentWaterDamagePumpValue: Double?
+    public var waterDamagePumpValue: Int?
+    public var pumpingMissionValue: Int?
+    public var finishUrl: String?
+    public var dateEnd: Int?
+    public var pumpingDateStart: Int?
+    public var pumpingDateEnd: Int?
+    public var dateNow: Date
+    public var longitude: Double
+    public var latitude: Double
+    public var tlng: Double?
+    public var tlat: Double?
+    public var icon: String
+    public var caption: String
+    public var captionOld: String?
+    public var filterId: String?
+    public var overlayIndex: Int?
+    public var additiveOverlays: String?
+    public var handoff: Bool?
     
     public var missionOwnerType: MarkerOwnerType {
         get {
+            #if DEBUG
             if (allianceId == nil && userId != 2313975) {
                 // TODO: remove
                 print("ERRRRORORORORO")
             }
+            #endif
             return allianceId == nil ? MarkerOwnerType.user : MarkerOwnerType.alliance
         }
     }
@@ -96,7 +98,7 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
     }
     
     public func matches(searchText: String) -> Bool {
-        if searchText == "" ||
+        if searchText.isEmpty ||
             caption.localizedCaseInsensitiveContains(searchText) ||
             address.localizedCaseInsensitiveContains(searchText) {
             return true
@@ -108,6 +110,44 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
     public static func == (lhs: MissionMarker, rhs: MissionMarker) -> Bool {
         return lhs.id == rhs.id
     }
+    
+    public mutating func update(newData: MissionMarker) {
+        self.swStartIn = newData.swStartIn
+        self.sw = newData.sw
+        self.tv = newData.tv
+        self.missionTypeId = newData.missionTypeId
+        self.missionType = newData.missionType
+        self.kt = newData.kt
+        self.allianceId = newData.allianceId
+        self.prisonersCount = newData.prisonersCount
+        self.patientsCount = newData.patientsCount
+        self.userId = newData.userId
+        self.address = newData.address
+        self.vehicleState = newData.vehicleState
+        self.missingText = newData.missingText
+        self.missingTextShort = newData.missingTextShort
+        self.liveCurrentValue = newData.liveCurrentValue
+        self.liveCurrentWaterDamagePumpValue = newData.liveCurrentWaterDamagePumpValue
+        self.waterDamagePumpValue = newData.waterDamagePumpValue
+        self.pumpingMissionValue = newData.pumpingMissionValue
+        self.finishUrl = newData.finishUrl
+        self.dateEnd = newData.dateEnd
+        self.pumpingDateStart = newData.pumpingDateStart
+        self.pumpingDateEnd = newData.pumpingDateEnd
+        self.dateNow = newData.dateNow
+        self.longitude = newData.longitude
+        self.latitude = newData.latitude
+        self.tlng = newData.tlng
+        self.tlat = newData.tlat
+        self.icon = newData.icon
+        self.caption = newData.caption
+        self.captionOld = newData.captionOld
+        self.filterId = newData.filterId
+        self.overlayIndex = newData.overlayIndex
+        self.additiveOverlays = newData.additiveOverlays
+        self.handoff = newData.handoff
+    }
+
     
     public init(id: Int,
                 swStartIn: Int?,
@@ -137,7 +177,7 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
                 latitude: Double,
                 tlng: Double?,
                 tlat: Double?,
-                icon: String?,
+                icon: String,
                 caption: String,
                 captionOld: String?,
                 filterId: String?,
@@ -216,7 +256,7 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
         self.latitude = try container.decode(Double.self, forKey: .latitude)
         self.tlng = try container.decodeIfPresent(Double.self, forKey: .tlng)
         self.tlat = try container.decodeIfPresent(Double.self, forKey: .tlat)
-        self.icon = try container.decodeIfPresent(String.self, forKey: .icon)
+        self.icon = try container.decode(String.self, forKey: .icon)
         self.caption = try container.decode(String.self, forKey: .caption)
         self.captionOld = try container.decodeIfPresent(String.self, forKey: .captionOld)
         self.filterId = try container.decodeIfPresent(String.self, forKey: .filterId)
@@ -227,5 +267,5 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
 }
 
 public extension MissionMarker {
-    static let preview = MissionMarker(id: 1, swStartIn: 1, sw: true, tv: 2, missionTypeId: 2, missionType: "Feuer", kt: false, allianceId: 2, prisonersCount: 2, patientsCount: 3, userId: 2, address: "Eine Addresse", vehicleState: 2, missingText: "Nichts fehlt", missingTextShort: "", liveCurrentValue: 2, liveCurrentWaterDamagePumpValue: 3.1, waterDamagePumpValue: 2, pumpingMissionValue: 2, finishUrl: "", dateEnd: 2, pumpingDateStart: 2, pumpingDateEnd: 2, dateNow: Date(), longitude: 48.1, latitude: 10.5, tlng: 12.2, tlat: 1.4, icon: "", caption: "Ein einsatz", captionOld: "", filterId: "", overlayIndex: 2, additiveOverlays: "", handoff: false)
+    static let preview = MissionMarker(id: 1, swStartIn: 1, sw: true, tv: 2, missionTypeId: 2, missionType: "Feuer", kt: false, allianceId: 2, prisonersCount: 2, patientsCount: 3, userId: 2, address: "Eine Addresse", vehicleState: 2, missingText: "Nichts fehlt", missingTextShort: "", liveCurrentValue: 2, liveCurrentWaterDamagePumpValue: 3.1, waterDamagePumpValue: 2, pumpingMissionValue: 2, finishUrl: "", dateEnd: 2, pumpingDateStart: 2, pumpingDateEnd: 2, dateNow: Date(), longitude: 48.1, latitude: 10.5, tlng: 12.2, tlat: 1.4, icon: "fire_rot", caption: "Feuer in Schule", captionOld: "", filterId: "", overlayIndex: 2, additiveOverlays: "", handoff: false)
 }

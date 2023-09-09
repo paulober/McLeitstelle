@@ -78,10 +78,29 @@ internal func retrieveCredentials(forUsername username: String) -> EssentialCred
         if let data = result as? Data,
            let credentials = try? JSONDecoder().decode(EssentialCredentials.self, from: data) {
             return credentials
+        } else {
+            print("[LssKit, retrieveCredentials] Error decoding data")
         }
     }
 
     return nil
+}
+
+internal func deleteCredentials() -> Bool {
+    guard let username = UserDefaults.standard.string(forKey: userDefaultsUsernameKey) else { return false }
+    
+    return deleteCredentials(for: username)
+}
+
+internal func deleteCredentials(for username: String) -> Bool {
+    let query: [String: Any] = [
+        kSecClass as String: kSecClassGenericPassword,
+        kSecAttrAccount as String: username
+    ]
+    
+    let status = SecItemDelete(query as CFDictionary)
+    
+    return status == noErr
 }
 
 internal func saveCredentials(username: String, password: String) -> Bool {

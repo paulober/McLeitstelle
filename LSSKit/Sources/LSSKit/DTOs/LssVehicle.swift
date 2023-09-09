@@ -42,7 +42,7 @@ public struct LssVehicle: Codable, Identifiable, Hashable, Equatable {
     public let id: Int
     public let caption: String
     public let buildingId: Int
-    public let vehicleType: Int
+    public let vehicleType: UInt16
     public var fmsReal: Int
     public let fmsShow: Int
     public let vehicleTypeCaption: String?
@@ -50,7 +50,7 @@ public struct LssVehicle: Codable, Identifiable, Hashable, Equatable {
     public let workingHourEnd: Int
     public let alarmDelay: Int
     public let maxPersonnelOverride: Int?
-    public let assignedPersonnelCount: Int?
+    public let assignedPersonnelCount: Int = 0
     public let ignoreAao: Bool
     public let targetType: String? // Use an enum if there are specific values
     public let targetId: Int?
@@ -98,4 +98,11 @@ public struct LssVehicle: Codable, Identifiable, Hashable, Equatable {
         // Search missions...
         return false
     }
+}
+
+public extension LssVehicle {
+    static let preview = LssVehicle(id: 1, caption: "LF 1 (Leverkusen)", buildingId: 1, vehicleType: VehicleType.lf.rawValue, fmsReal: 2, fmsShow: 2, vehicleTypeCaption: "LF 20", workingHourStart: 1, workingHourEnd: 1, alarmDelay: 1, maxPersonnelOverride: 1, ignoreAao: false, targetType: "", targetId: 1, tractiveVehicleId: 1, queuedMissionId: nil, equipments: [], assignedEquipments: [], imageUrlStatic: "", imageUrlAnimated: "")
+    static let preview2 = LssVehicle(id: 2, caption: "ELW 1/1 (Leverkusen)", buildingId: 1, vehicleType: VehicleType.elw1.rawValue, fmsReal: 2, fmsShow: 2, vehicleTypeCaption: "ELW 1", workingHourStart: 1, workingHourEnd: 1, alarmDelay: 1, maxPersonnelOverride: 1, ignoreAao: false, targetType: "", targetId: 1, tractiveVehicleId: 1, queuedMissionId: nil, equipments: [], assignedEquipments: [], imageUrlStatic: "", imageUrlAnimated: "")
+    static let preview3 = LssVehicle(id: 3, caption: "ELW 1/2 (Leverkusen)", buildingId: 1, vehicleType: VehicleType.elw1.rawValue, fmsReal: 2, fmsShow: 2, vehicleTypeCaption: "ELW 1", workingHourStart: 1, workingHourEnd: 1, alarmDelay: 1, maxPersonnelOverride: 1, ignoreAao: false, targetType: "", targetId: 1, tractiveVehicleId: 1, queuedMissionId: nil, equipments: [], assignedEquipments: [], imageUrlStatic: "", imageUrlAnimated: "")
+    static let preview4 = LssVehicle(id: 4, caption: "ELW 2 (Landsberg am Lech)", buildingId: 1, vehicleType: VehicleType.elw2.rawValue, fmsReal: 2, fmsShow: 2, vehicleTypeCaption: "ELW 2", workingHourStart: 1, workingHourEnd: 1, alarmDelay: 1, maxPersonnelOverride: 1, ignoreAao: false, targetType: "", targetId: 1, tractiveVehicleId: 1, queuedMissionId: nil, equipments: [], assignedEquipments: [], imageUrlStatic: "", imageUrlAnimated: "")
 }

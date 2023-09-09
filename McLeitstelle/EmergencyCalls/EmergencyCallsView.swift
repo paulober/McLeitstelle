@@ -16,16 +16,16 @@ struct EmergencyCallsView: View {
     @State private var ownerFilter: OwnerFilter = .user
     @State private var selection: Set<MissionMarker.ID> = []
     
-#if os(iOS)
+    #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
-#endif
+    #endif
     
     var displayAsList: Bool {
-#if os(iOS)
+        #if os(iOS)
         return sizeClass == .compact
-#else
+        #else
         return false
-#endif
+        #endif
     }
     
     var missions: [MissionMarker] {
@@ -52,18 +52,18 @@ struct EmergencyCallsView: View {
             EmergencyCallDetailsView(model: model, mission: model.missionBinding(for: id))
         }
         .toolbar {
-            if !displayAsList {
-                toolbarButtons
-            }
+            toolbarButtons
         }
         .searchable(text: $searchText)
+        .onChange(of: searchText, initial: false) {
+            selection.removeAll()
+        }
     }
     
     var list: some View {
         List {
-            ForEach(missions, id: \.id) { mission in
-                Text(mission.caption)
-            }
+            // TODO: sort in sections
+            emergencyCallRows(missions)
             /*if let orders = orderSections[.placed] {
              Section("New") {
              orderRows(orders)
@@ -90,13 +90,29 @@ struct EmergencyCallsView: View {
         }
         .headerProminence(.increased)
     }
+    
+    func emergencyCallRows(_ missions: [MissionMarker]) -> some View {
+        let userId = model.getUserID()
+        
+        return ForEach(missions) { mission in
+            NavigationLink(value: mission.id) {
+                EmergencyCallRow(missionMarker: mission, imageURL: URL(string: model.relativeLssURLString(path: "/images/\(mission.icon).png"))!)
+                    .badge(model.radioMessages.filter { if let mId = $0.missionId { return mId == mission.id && $0.userId == userId && $0.fms == FMSStatus.sprechwunsch.rawValue } else { return false }}.count)
+                    .badgeProminence(.increased)
+                    .badge((mission.patientsCount ?? 0) + (mission.prisonersCount ?? 0))
+                    
+            }
+        }
+    }
 
     @ViewBuilder
     var toolbarButtons: some View {
+        #if os(macOS)
         NavigationLink(value: selection.first) {
             Label("View Details", systemImage: "list.bullet.below.rectangle")
         }
         .disabled(selection.isEmpty)
+        #endif
         
         Picker("Owner", selection: $ownerFilter) {
             Text("All").tag(OwnerFilter.all)

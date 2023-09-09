@@ -17,8 +17,11 @@ internal func lssBuildingsIDURL(buildingId: String) -> URL {
     return lssBuildingsURL.appending(component: "/\(buildingId)")
 }
 
+internal func lssBuildingsVehiclesURL(buildingId: String) -> URL {
+    return lssBaseURL.appendingPathComponent("api/v2/buildings/\(buildingId)/vehicles")
+}
 
-internal let lssVehiclesURL = lssBaseURL.appending(component: "/vehicles")
+internal let lssVehiclesURL = lssBaseURL.appendingPathComponent("vehicles")
 
 internal func lssIVehiclesURL(_ vehicleId: Int) -> URL {
     return lssVehiclesURL(String(vehicleId))
@@ -53,6 +56,7 @@ public struct LssEndpoint {
     static let v2Vehicles = "api/v2/vehicles"
     static func v2VehiclesByID(_ id: Int) -> String { return "api/v2/vehicles/\(id)" }
     static func v2BuildingsVehiclesByID(_ id: Int) -> String { return "api/v2/buildings/\(id)/vehicles" }
+    static func v2BuildingsVehiclesByID(_ id: String) -> String { return "api/v2/buildings/\(id)/vehicles" }
     
     static func urlForVehicles() -> URL {
         return lssBaseURL.appendingPathComponent(vehicles)
@@ -108,6 +112,10 @@ public struct LssEndpoint {
     }
 
     public static func urlForV2BuildingsVehiclesByID(_ id: Int) -> URL {
+        return lssBaseURL.appendingPathComponent(v2BuildingsVehiclesByID(id))
+    }
+    
+    public static func urlForV2BuildingsVehiclesByID(_ id: String) -> URL {
         return lssBaseURL.appendingPathComponent(v2BuildingsVehiclesByID(id))
     }
 }

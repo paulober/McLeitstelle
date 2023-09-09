@@ -22,7 +22,7 @@ internal func htmlExtractVehicleDrives(from html: String) -> [VehicleDrive] {
                 let vehicleDrive = try decoder.decode(VehicleDrive.self, from: data)
                 return vehicleDrive
             } catch let error as DecodingError {
-                Swift.print("[LssKit, htmlVehicleDriveExtraction] Error decoding VehicleDrive: \(error)")
+                Swift.print("[LssKit, htmlExtractVehicleDrives] Error decoding VehicleDrive: \(error) in json: \(String(data: data, encoding: .utf8) ?? "N/A")")
             } catch {}
         }
         

@@ -7,7 +7,7 @@
 
 import Foundation
 
-fileprivate let allianceChatRegex = /allianceChat\((\{.*?\})\);/
+fileprivate let allianceChatRegex = /allianceChat\(\s*(\{[^{}]+\})\);/
 
 internal func htmlExtractAllianceChats(from html: String) -> [ChatMessage] {
     let matches = html.matches(of: allianceChatRegex)

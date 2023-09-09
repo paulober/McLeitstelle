@@ -8,14 +8,19 @@
 public struct RadioMessage: Codable, Identifiable, Hashable, Equatable {
     public let targetBuildingId: Int?
     public let missionId: Int?
-    public let additionalText: String
+    public let additionalText: String?
     public let userId: Int
     public let type: String
+    /// Equals to vehicle id if type == "vehicle_fms"
     public let id: Int
     public let fmsReal: Int
     public let fms: Int
     public let fmsText: String
     public let caption: String
+    
+    public var optionalMissionId: Int {
+        return missionId ?? -1
+    }
 
     private enum CodingKeys: String, CodingKey {
         case targetBuildingId = "target_building_id"
@@ -49,3 +54,6 @@ public struct RadioMessage: Codable, Identifiable, Hashable, Equatable {
     }
 }
 
+public extension RadioMessage {
+    static let preview = RadioMessage(targetBuildingId: nil, missionId: 123, additionalText: nil, userId: 1234, type: "vehicle_fms", id: 421, fmsReal: 5, fms: 5, fmsText: "Sprechwunsch", caption: "RTW 2 (LL Nord)")
+}

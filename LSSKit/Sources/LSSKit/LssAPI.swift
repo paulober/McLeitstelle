@@ -19,7 +19,7 @@ public class LssAPI {
     
     private var fayeDataSubject = PassthroughSubject<FayeData, Never>()
     
-    public init(creds: inout FayeCredentials) {
+    public init(creds: FayeCredentials) {
         // TODO: maybe start without unique client id then sever creates new
         self.credentials = creds
         // TODO: implement /level_upgrade and
@@ -40,24 +40,26 @@ public class LssAPI {
     /**
      Connects to websocket, refreshes credentials and loads initital data.
      */
-    public func connect() async -> LssDTOCollection {
-        var initialData: LssDTOCollection = LssDTOCollection()
+    public func connect(creds: FayeCredentials) async -> LssDTOCollection {
+        var initialData: LssDTOCollection = LssDTOCollection(creds: creds)
         
         // set initial cookies for index request
-        constructCookies(for: lssBaseURL, creds: credentials)
-        let indexHTML = await downloadIndexHTML(from: lssBaseURL, creds: &credentials)
+        constructCookies(for: lssBaseURL, creds: initialData.creds)
+        let indexHTML = await downloadIndexHTML(from: lssBaseURL, creds: &initialData.creds)
         if let indexHTML = indexHTML {
             let scriptsHTML = htmlReduceToScripts(from: indexHTML)
-            htmlExtractUserDetails(from: scriptsHTML, creds: &credentials)
+            htmlExtractUserDetails(from: scriptsHTML, indexHTML: indexHTML, creds: &initialData.creds)
             // reconstruct cookies with updated creds
-            constructCookies(for: lssBaseURL, creds: credentials)
+            constructCookies(for: lssBaseURL, creds: initialData.creds)
             // TODO: find better solution cause this is also done in FayeClient.init
-            client.authenticate(creds: credentials)
+            client.authenticate(creds: initialData.creds)
             
             initialData.radioMessages = htmlExtractRadioMessages(from: scriptsHTML)
             initialData.chatMessages = htmlExtractAllianceChats(from: scriptsHTML)
-            (initialData.missionMarkers, initialData.patientMarkers, initialData.buildingMarkers) = htmlExtractMarkers(from: scriptsHTML)
+            (initialData.missionMarkers, initialData.patientMarkers, initialData.combinedPatientMarkers, initialData.buildingMarkers) = htmlExtractMarkers(from: scriptsHTML)
             initialData.vehicleDrives = htmlExtractVehicleDrives(from: scriptsHTML)
+            
+            self.credentials = initialData.creds
         } else {
             // TODO: better handling of this case because then creds.exts are not filled
             print("[LssKit] Error, unable to retrieve Lss WebApp!")

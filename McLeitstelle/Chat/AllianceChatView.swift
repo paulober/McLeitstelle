@@ -13,14 +13,18 @@ struct AllianceChatView: View {
     @State var newMessageText: String = ""
     
     var userId: Int {
-        model.getUserID()
+        return model.getUserID()
+    }
+    
+    var username: String {
+        return model.getUsername() ?? ""
     }
     
     var body: some View {
         VStack {
             ScrollView {
                 ForEach(model.chatMessages, id: \.hashValue) { message in
-                    ChatMessageRow(userId: userId, chatMessage: model.chatMessageBinding(for: message.hashValue))
+                    ChatMessageRow(missionMarkers: $model.missionMarkers, userId: userId, chatMessage: model.chatMessageBinding(for: message.hashValue))
                 }
                 .rotationEffect(.degrees(180))
             }
@@ -50,12 +54,16 @@ struct AllianceChatView: View {
             .padding()
         }
         .navigationTitle("Alliance (ger. Verband) Chat")
+        .navigationDestination(for: MissionMarker.ID.self) { id in
+            EmergencyCallDetailsView(model: model, mission: model.missionBinding(for: id))
+        }
     }
     
     private func sendMessage() {
         Task {
             let result = await model.sendAllianceChatMessageAsync(message: newMessageText, missionId: nil)
             if result {
+                newMessageText = ""
                 print("Message send successfully")
             }
         }

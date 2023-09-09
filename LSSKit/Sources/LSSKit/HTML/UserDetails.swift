@@ -27,8 +27,9 @@ fileprivate let extRegex = try! NSRegularExpression(pattern: #"message\.ext\["([
 fileprivate let mapViewRegex = /\.map\('map'\)\.setView\(\[(\-?\d+\.\d+), (\-?\d+\.\d+)\]/
 fileprivate let mapViewRegex2 = /const coordinate = new mapkit\.Coordinate\((\-?\d+\.\d+), (\-?\d+\.\d+)\)/
 fileprivate let csrfRegex = /<meta[^>]*content="([^"]*)"[^>]*name="csrf-token"/
+fileprivate let missionSpeedRegex = /missionSpeed\(\s*(\d)\s*\);/
 
-internal func htmlExtractUserDetails(from html: String, creds: inout FayeCredentials) {
+internal func htmlExtractUserDetails(from html: String, indexHTML: String, creds: inout FayeCredentials) {
     if let userIdMatch = try? userIdRegex.firstMatch(in: html){
         let userId = String(userIdMatch.output.1)
         print("[LssKit, htmlExtractUserDetails] Found userId: \(userId)")
@@ -75,9 +76,16 @@ internal func htmlExtractUserDetails(from html: String, creds: inout FayeCredent
        }
     }
     
-    if let csrfTokenMatch = html.firstMatch(of: csrfRegex) {
+    if let csrfTokenMatch = indexHTML.firstMatch(of: csrfRegex) {
         let csrfToken = String(csrfTokenMatch.output.1)
         print("[LssKit, htmlExtractUserDetails] Found csrfToken: \(csrfToken)")
         creds.csrfToken = csrfToken
+    }
+    
+    if let missionSpeedMatch = html.firstMatch(of: missionSpeedRegex) {
+        if let missionSpeed = UInt8(missionSpeedMatch.output.1) {
+            print("[LssKit, htmlExtractUserDetails] Found missionSpeed: \(missionSpeed)")
+            creds.missionSpeed = missionSpeed
+        }
     }
 }

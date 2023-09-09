@@ -16,7 +16,7 @@ struct DetailColumn: View {
     var body: some View {
         switch selection {
         case .dashboard:
-            DashboardView(navigationSelection: $selection)
+            DashboardView(model: model, navigationSelection: $selection)
         case .emergencyCalls:
             EmergencyCallsView(model: model)
         case .allianceChat:
@@ -24,11 +24,11 @@ struct DetailColumn: View {
         case .buildings:
             BuildingsView(model: model)
         case .vehicles:
-            VehiclesView()
+            VehiclesView(model: model)
         case .alliance:
             AllianceView()
         case .finances:
-            FinancesView()
+            FinancesView(model: model)
         case .account:
             AccountView(model: model)
         case nil:

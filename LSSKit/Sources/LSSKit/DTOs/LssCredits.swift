@@ -39,3 +39,6 @@ public struct LssCredits: Codable {
     }
 }
 
+public extension LssCredits {
+    static let preview = LssCredits(creditsUserCurrent: 0, creditsUserTotal: 0, creditsAllianceCurrent: 0, creditsAllianceTotal: 0, creditsAllianceActive: true, userName: "", userId: 0, userToplistPosition: 0, userDirectplayRegistered: false, userEmailRegistered: true, userFacebookRegistered: false, userAppleRegistered: false, userLevel: 1, userLevelTitle: "")
+}

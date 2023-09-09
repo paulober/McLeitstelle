@@ -8,6 +8,7 @@
 /// Not a DTO used by Lss
 public struct FayeData {
     public var newPatientMarkers: [PatientMarker] = []
+    public var newCombinedPatientMarkers: [CombinedPatientMarker] = []
     public var newMissionMarkers: [MissionMarker] = []
     public var newVehicleDrives: [VehicleDrive] = []
     public var newPrisonerMarkers: [PrisonerMarker] = []

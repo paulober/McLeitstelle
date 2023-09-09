@@ -9,14 +9,16 @@ import Foundation
 
 fileprivate let missionMarkerRegex = /missionMarkerAdd\((\s*{[^}]+}\s*)\);/
 fileprivate let patientMarkerRegex = /patientMarkerAdd\((\{[^{}]+\})\);/
+fileprivate let patientMarkerAddCombinedRegex = /patientMarkerAddCombined\(\s*({[^;]+})\s*\);/
 fileprivate let buildingMarkerRegex = /buildingMarkerAdd\((\{[^{}]*\})\);/
 
-internal func htmlExtractMarkers(from html: String) -> ([MissionMarker], [PatientMarker], [BuildingMarker]) {
+internal func htmlExtractMarkers(from html: String) -> ([MissionMarker], [PatientMarker], [CombinedPatientMarker], [BuildingMarker]) {
     let missionMarkers = htmlExtractMissionMarkers(from: html)
     let patientMarkers = htmlExtractPatientMarkers(from: html)
+    let combinedPatientMarkers = htmlExtractCombinedPatientMarkers(from: html)
     let buildingMarkers = htmlExtractBuildingMarkers(from: html)
     
-    return (missionMarkers, patientMarkers, buildingMarkers)
+    return (missionMarkers, patientMarkers, combinedPatientMarkers, buildingMarkers)
 }
 
 internal func htmlExtractMissionMarkers(from html: String) -> [MissionMarker] {
@@ -61,6 +63,28 @@ internal func htmlExtractPatientMarkers(from html: String) -> [PatientMarker] {
     }
     
     return patientMarkers
+}
+
+internal func htmlExtractCombinedPatientMarkers(from html: String) -> [CombinedPatientMarker] {
+    let matches = html.matches(of: patientMarkerAddCombinedRegex)
+    
+    let decoder = JSONDecoder()
+    let combinedPatientMarkers: [CombinedPatientMarker] = matches.compactMap {
+        let jsonData = $0.output.1.data(using: String.Encoding.utf8)
+        
+        if let data = jsonData {
+            do {
+                let marker = try decoder.decode(CombinedPatientMarker.self, from: data)
+                return marker
+            } catch {
+                print("[LssKit, htmlExtractPatientMarkers] Error decoding CombinedPatientMarker.")
+            }
+        }
+        
+        return nil
+    }
+    
+    return combinedPatientMarkers
 }
 
 internal func htmlExtractBuildingMarkers(from html: String) -> [BuildingMarker] {

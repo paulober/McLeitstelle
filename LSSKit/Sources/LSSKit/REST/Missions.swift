@@ -9,32 +9,6 @@ import Foundation
 
 fileprivate let session = URLSession(configuration: .default)
 
-internal func restMissionGenerate(csrfToken: String) async -> Bool {
-    var urlComponents = URLComponents(url: lssBuildingsVehiclesMapURL, resolvingAgainstBaseURL: false)
-    var queryItems: [URLQueryItem] = []
-    let queryItem = URLQueryItem(name: "_", value: String(Date().timeIntervalSince1970))
-    queryItems.append(queryItem)
-    urlComponents?.queryItems = queryItems
-    
-    guard let url = urlComponents?.url else {
-        return false
-    }
-    
-    var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 5.0)
-    getDefaultHeaderWithContentTypeForm(request: &request, csrfToken: csrfToken, url: url)
-    
-    if let (_, response) = try? await session.data(for: request) {
-        if let httpResponse = response as? HTTPURLResponse {
-            if httpResponse.statusCode == 200 {
-                return true
-            }
-        }
-    } else {
-        print("[LssKit, restMissionGenerate] Error on-request.")
-    }
-    
-    return false
-}
 
 internal func restMissionAlarm(csrfToken: String, missionId: Int, vehicleIds: Set<Int>) async -> Bool {
     var request = URLRequest(url: lssMissionAlarmURL(missionId), cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 5.0)

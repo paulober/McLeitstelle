@@ -20,8 +20,9 @@ public struct FayeCredentials {
     
     public var exts: [String: String] = [:]
     public var mapView: (Double, Double)?
+    public var missionSpeed: UInt8
     
-    public init(stripeMid: String, sessionId: String, mcUniqueClientId: String, rememberUserToken: String, userId: String? = nil, userName: String? = nil, allianceId: String? = nil, allianceGuid: String? = nil, csrfToken: String? = nil, exts: [String : String] = [:], mapView: (Double, Double)? = nil) {
+    public init(stripeMid: String, sessionId: String, mcUniqueClientId: String, rememberUserToken: String, userId: String? = nil, userName: String? = nil, allianceId: String? = nil, allianceGuid: String? = nil, csrfToken: String? = nil, exts: [String : String] = [:], mapView: (Double, Double)? = nil, missionSpeed: UInt8 = 0) {
         self.stripeMid = stripeMid
         self.sessionId = sessionId
         self.mcUniqueClientId = mcUniqueClientId
@@ -33,5 +34,6 @@ public struct FayeCredentials {
         self.csrfToken = csrfToken
         self.exts = exts
         self.mapView = mapView
+        self.missionSpeed = missionSpeed
     }
 }

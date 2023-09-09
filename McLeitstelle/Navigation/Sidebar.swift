@@ -71,16 +71,31 @@ struct Sidebar: View {
                 }
             }
             
+            #if os(macOS)
             Spacer()
+            #endif
             
+            #if os(iOS)
             Section {
-                Label("\(model.credits.formatted())", systemImage: "eurosign.circle")
+                Label("\(model.credits.creditsUserCurrent.formatted())", systemImage: "eurosign.circle")
+                    .monospacedDigit()
+                
+                NavigationLink(value: Panel.account) {
+                    Label(model.getUsername() ?? "Account", systemImage: "person.crop.circle")
+                }
+            } header: {
+                Text("Settings")
+            }
+            #else
+            Section {
+                Label("\(model.credits.creditsUserCurrent.formatted())", systemImage: "eurosign.circle")
                     .monospacedDigit()
                 
                 NavigationLink(value: Panel.account) {
                     Label(model.getUsername() ?? "Account", systemImage: "person.crop.circle")
                 }
             }
+            #endif
         }
         .navigationTitle("McLeitstelle")
         #if os(macOS)

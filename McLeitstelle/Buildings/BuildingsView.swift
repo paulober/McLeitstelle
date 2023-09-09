@@ -48,61 +48,45 @@ struct BuildingsView: View {
             }
         }
         .navigationTitle("Buildings")
-        /*.navigationDestination(for: BuildingMarker.ID.self) { id in
-            BuildingDetailsView(model: model, mission: model.missionBinding(for: id))
-        }*/
+        .navigationDestination(for: BuildingMarker.ID.self) { id in
+            BuildingDetailsView(model: model, building: model.buildingBinding(for: id))
+        }
         .toolbar {
-            if !displayAsList {
-                toolbarButtons
-            }
+            toolbarButtons
         }
         .searchable(text: $searchText)
     }
     
     var list: some View {
-        List {
-            ForEach(buildings, id: \.id) { building in
-                Text(building.name)
+        List(buildings, id: \.id) { building in
+            NavigationLink(value: building.id) {
+                HStack {
+                    Text(building.name)
+                    Spacer()
+                    Label("is Owner", systemImage: building.buildingOwnerType.iconSystemName)
+                }
             }
-            /*if let orders = orderSections[.placed] {
-             Section("New") {
-             orderRows(orders)
-             }
-             }
-             
-             if let orders = orderSections[.preparing] {
-             Section("Preparing") {
-             orderRows(orders)
-             }
-             }
-             
-             if let orders = orderSections[.ready] {
-             Section("Ready") {
-             orderRows(orders)
-             }
-             }
-             
-             if let orders = orderSections[.completed] {
-             Section("Completed") {
-             orderRows(orders)
-             }
-             }*/
         }
         .headerProminence(.increased)
     }
     
     @ViewBuilder
     var toolbarButtons: some View {
-        /*NavigationLink(value: selection.first) {
-            Label("View Details", systemImage: "list.bullet.below.rectangle")
+        if !displayAsList {
+            NavigationLink(value: selection.first) {
+                Label("View Details", systemImage: "list.bullet.below.rectangle")
+            }
+            .disabled(selection.isEmpty)
         }
-        .disabled(selection.isEmpty)*/
         
         Picker("Owner", selection: $ownerFilter) {
             Text("All").tag(OwnerFilter.all)
             Text("User").tag(OwnerFilter.user)
             Text("Alliance").tag(OwnerFilter.alliance)
         }
+        #if os(iOS)
+        .pickerStyle(.segmented)
+        #endif
     }
 }
 

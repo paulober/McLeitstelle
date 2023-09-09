@@ -10,8 +10,12 @@
 		B1013E952AA4152F00AFA870 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1013E942AA4152F00AFA870 /* Coordinate.swift */; };
 		B10F2FA22AA5D980000B1741 /* AllianceChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F2FA12AA5D980000B1741 /* AllianceChatView.swift */; };
 		B10F2FA42AA5DC3E000B1741 /* ChatMessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F2FA32AA5DC3E000B1741 /* ChatMessageRow.swift */; };
-		B10F2FA72AA5EC5B000B1741 /* RadioMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F2FA62AA5EC5B000B1741 /* RadioMessagesView.swift */; };
 		B10F2FA92AA5ECFA000B1741 /* BuildingDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F2FA82AA5ECFA000B1741 /* BuildingDetailsView.swift */; };
+		B10F2FAB2AA65393000B1741 /* BuildingDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F2FAA2AA65393000B1741 /* BuildingDetailsViewModel.swift */; };
+		B11B4CCE2AAB86A5000C9422 /* VehicleRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11B4CCD2AAB86A5000C9422 /* VehicleRowView.swift */; };
+		B11B4CD02AAB99A7000C9422 /* EmergencyCallRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11B4CCF2AAB99A7000C9422 /* EmergencyCallRow.swift */; };
+		B11B9F382AA72A9900C18313 /* VehiclesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11B9F372AA72A9900C18313 /* VehiclesTable.swift */; };
+		B11B9F3A2AA72CE500C18313 /* VehicleDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11B9F392AA72CE500C18313 /* VehicleDetailsView.swift */; };
 		B142A56E2AA38BC0001B4D9A /* EmergencyCallsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B142A56D2AA38BC0001B4D9A /* EmergencyCallsTable.swift */; };
 		B142A5742AA3E473001B4D9A /* EmergencyCallDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B142A5732AA3E473001B4D9A /* EmergencyCallDetailsView.swift */; };
 		B18FD8FE2AA36FB90094FFBC /* LssKit in Frameworks */ = {isa = PBXBuildFile; productRef = B18FD8FD2AA36FB90094FFBC /* LssKit */; };
@@ -21,6 +25,7 @@
 		B19ADC1A2AA0F6E30013B88C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ADC192AA0F6E30013B88C /* Assets.xcassets */; };
 		B19ADC1E2AA0F6E30013B88C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B19ADC1D2AA0F6E30013B88C /* Preview Assets.xcassets */; };
 		B19ADC272AA0F7D00013B88C /* Sidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ADC262AA0F7D00013B88C /* Sidebar.swift */; };
+		B19B20642AA8DA990045B84E /* MarkerFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19B20632AA8DA990045B84E /* MarkerFilter.swift */; };
 		B1A3E0632AA11937006CD44D /* DetailColumn.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3E0622AA11937006CD44D /* DetailColumn.swift */; };
 		B1A3E0682AA11996006CD44D /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3E0672AA11996006CD44D /* DashboardView.swift */; };
 		B1A3E06B2AA11B93006CD44D /* EmergencyCallsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3E06A2AA11B93006CD44D /* EmergencyCallsView.swift */; };
@@ -29,6 +34,7 @@
 		B1A3E0742AA11C4B006CD44D /* AllianceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3E0732AA11C4B006CD44D /* AllianceView.swift */; };
 		B1A3E0782AA11C72006CD44D /* FinancesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3E0772AA11C72006CD44D /* FinancesView.swift */; };
 		B1A3E07A2AA11C89006CD44D /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A3E0792AA11C89006CD44D /* AccountView.swift */; };
+		B1B7688F2AACDE360068895A /* RadioMessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1B7688E2AACDE360068895A /* RadioMessageRow.swift */; };
 		B1BED2222AA4A58B0029DE3E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BED2212AA4A58B0029DE3E /* LoginView.swift */; };
 		B1BED2272AA51CCF0029DE3E /* BuildingsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BED2262AA51CCF0029DE3E /* BuildingsTable.swift */; };
 		B1BED2292AA528010029DE3E /* OwnerFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BED2282AA528010029DE3E /* OwnerFilter.swift */; };
@@ -38,8 +44,12 @@
 		B1013E942AA4152F00AFA870 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		B10F2FA12AA5D980000B1741 /* AllianceChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllianceChatView.swift; sourceTree = "<group>"; };
 		B10F2FA32AA5DC3E000B1741 /* ChatMessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageRow.swift; sourceTree = "<group>"; };
-		B10F2FA62AA5EC5B000B1741 /* RadioMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioMessagesView.swift; sourceTree = "<group>"; };
 		B10F2FA82AA5ECFA000B1741 /* BuildingDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingDetailsView.swift; sourceTree = "<group>"; };
+		B10F2FAA2AA65393000B1741 /* BuildingDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingDetailsViewModel.swift; sourceTree = "<group>"; };
+		B11B4CCD2AAB86A5000C9422 /* VehicleRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleRowView.swift; sourceTree = "<group>"; };
+		B11B4CCF2AAB99A7000C9422 /* EmergencyCallRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallRow.swift; sourceTree = "<group>"; };
+		B11B9F372AA72A9900C18313 /* VehiclesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehiclesTable.swift; sourceTree = "<group>"; };
+		B11B9F392AA72CE500C18313 /* VehicleDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleDetailsView.swift; sourceTree = "<group>"; };
 		B142A56D2AA38BC0001B4D9A /* EmergencyCallsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallsTable.swift; sourceTree = "<group>"; };
 		B142A5732AA3E473001B4D9A /* EmergencyCallDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallDetailsView.swift; sourceTree = "<group>"; };
 		B19ADC102AA0F6E20013B88C /* McLeitstelle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = McLeitstelle.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +61,7 @@
 		B19ADC1D2AA0F6E30013B88C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B19ADC242AA0F7750013B88C /* LSSKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = LSSKit; sourceTree = "<group>"; };
 		B19ADC262AA0F7D00013B88C /* Sidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sidebar.swift; sourceTree = "<group>"; };
+		B19B20632AA8DA990045B84E /* MarkerFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerFilter.swift; sourceTree = "<group>"; };
 		B1A3E0622AA11937006CD44D /* DetailColumn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailColumn.swift; sourceTree = "<group>"; };
 		B1A3E0672AA11996006CD44D /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		B1A3E06A2AA11B93006CD44D /* EmergencyCallsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallsView.swift; sourceTree = "<group>"; };
@@ -59,6 +70,7 @@
 		B1A3E0732AA11C4B006CD44D /* AllianceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllianceView.swift; sourceTree = "<group>"; };
 		B1A3E0772AA11C72006CD44D /* FinancesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancesView.swift; sourceTree = "<group>"; };
 		B1A3E0792AA11C89006CD44D /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		B1B7688E2AACDE360068895A /* RadioMessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioMessageRow.swift; sourceTree = "<group>"; };
 		B1BED2212AA4A58B0029DE3E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B1BED2262AA51CCF0029DE3E /* BuildingsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingsTable.swift; sourceTree = "<group>"; };
 		B1BED2282AA528010029DE3E /* OwnerFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnerFilter.swift; sourceTree = "<group>"; };
@@ -81,6 +93,7 @@
 			children = (
 				B1013E942AA4152F00AFA870 /* Coordinate.swift */,
 				B1BED2282AA528010029DE3E /* OwnerFilter.swift */,
+				B19B20632AA8DA990045B84E /* MarkerFilter.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -92,14 +105,6 @@
 				B10F2FA32AA5DC3E000B1741 /* ChatMessageRow.swift */,
 			);
 			path = Chat;
-			sourceTree = "<group>";
-		};
-		B10F2FA52AA5EC50000B1741 /* Radio */ = {
-			isa = PBXGroup;
-			children = (
-				B10F2FA62AA5EC5B000B1741 /* RadioMessagesView.swift */,
-			);
-			path = Radio;
 			sourceTree = "<group>";
 		};
 		B18FD8FC2AA36FB90094FFBC /* Frameworks */ = {
@@ -130,7 +135,6 @@
 		B19ADC122AA0F6E20013B88C /* McLeitstelle */ = {
 			isa = PBXGroup;
 			children = (
-				B10F2FA52AA5EC50000B1741 /* Radio */,
 				B10F2FA02AA5D972000B1741 /* Chat */,
 				B1BED2232AA4B6AD0029DE3E /* Models */,
 				B1013E932AA4150C00AFA870 /* Helper */,
@@ -172,6 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				B1A3E0672AA11996006CD44D /* DashboardView.swift */,
+				B1B7688E2AACDE360068895A /* RadioMessageRow.swift */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 				B1A3E06A2AA11B93006CD44D /* EmergencyCallsView.swift */,
 				B142A56D2AA38BC0001B4D9A /* EmergencyCallsTable.swift */,
 				B142A5732AA3E473001B4D9A /* EmergencyCallDetailsView.swift */,
+				B11B4CCF2AAB99A7000C9422 /* EmergencyCallRow.swift */,
 			);
 			path = EmergencyCalls;
 			sourceTree = "<group>";
@@ -192,6 +198,7 @@
 				B1A3E06D2AA11C00006CD44D /* BuildingsView.swift */,
 				B1BED2262AA51CCF0029DE3E /* BuildingsTable.swift */,
 				B10F2FA82AA5ECFA000B1741 /* BuildingDetailsView.swift */,
+				B10F2FAA2AA65393000B1741 /* BuildingDetailsViewModel.swift */,
 			);
 			path = Buildings;
 			sourceTree = "<group>";
@@ -200,6 +207,9 @@
 			isa = PBXGroup;
 			children = (
 				B1A3E0702AA11C28006CD44D /* VehiclesView.swift */,
+				B11B9F372AA72A9900C18313 /* VehiclesTable.swift */,
+				B11B9F392AA72CE500C18313 /* VehicleDetailsView.swift */,
+				B11B4CCD2AAB86A5000C9422 /* VehicleRowView.swift */,
 			);
 			path = Vehicles;
 			sourceTree = "<group>";
@@ -310,16 +320,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1B7688F2AACDE360068895A /* RadioMessageRow.swift in Sources */,
 				B1A3E07A2AA11C89006CD44D /* AccountView.swift in Sources */,
-				B10F2FA72AA5EC5B000B1741 /* RadioMessagesView.swift in Sources */,
+				B11B9F382AA72A9900C18313 /* VehiclesTable.swift in Sources */,
 				B1A3E0712AA11C28006CD44D /* VehiclesView.swift in Sources */,
 				B1BED2222AA4A58B0029DE3E /* LoginView.swift in Sources */,
 				B142A56E2AA38BC0001B4D9A /* EmergencyCallsTable.swift in Sources */,
 				B19ADC162AA0F6E20013B88C /* ContentView.swift in Sources */,
 				B19ADC182AA0F6E20013B88C /* Item.swift in Sources */,
 				B1A3E06E2AA11C00006CD44D /* BuildingsView.swift in Sources */,
+				B11B4CCE2AAB86A5000C9422 /* VehicleRowView.swift in Sources */,
 				B1BED2272AA51CCF0029DE3E /* BuildingsTable.swift in Sources */,
+				B10F2FAB2AA65393000B1741 /* BuildingDetailsViewModel.swift in Sources */,
 				B19ADC272AA0F7D00013B88C /* Sidebar.swift in Sources */,
+				B19B20642AA8DA990045B84E /* MarkerFilter.swift in Sources */,
 				B142A5742AA3E473001B4D9A /* EmergencyCallDetailsView.swift in Sources */,
 				B19ADC142AA0F6E20013B88C /* McLeitstelleApp.swift in Sources */,
 				B1A3E0682AA11996006CD44D /* DashboardView.swift in Sources */,
@@ -327,9 +341,11 @@
 				B10F2FA22AA5D980000B1741 /* AllianceChatView.swift in Sources */,
 				B10F2FA92AA5ECFA000B1741 /* BuildingDetailsView.swift in Sources */,
 				B1A3E06B2AA11B93006CD44D /* EmergencyCallsView.swift in Sources */,
+				B11B9F3A2AA72CE500C18313 /* VehicleDetailsView.swift in Sources */,
 				B1A3E0632AA11937006CD44D /* DetailColumn.swift in Sources */,
 				B10F2FA42AA5DC3E000B1741 /* ChatMessageRow.swift in Sources */,
 				B1A3E0782AA11C72006CD44D /* FinancesView.swift in Sources */,
+				B11B4CD02AAB99A7000C9422 /* EmergencyCallRow.swift in Sources */,
 				B1013E952AA4152F00AFA870 /* Coordinate.swift in Sources */,
 				B1BED2292AA528010029DE3E /* OwnerFilter.swift in Sources */,
 			);

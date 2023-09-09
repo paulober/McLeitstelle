@@ -31,21 +31,21 @@ struct McLeitstelleApp: App {
             ContentView(model: model)
         }
         .modelContainer(sharedModelContainer)
-    #if os(macOS)
-        .defaultSize(width: 1000, height: 650)
-    #endif
+        #if os(macOS)
+        .defaultSize(width: 1300, height: 650)
+        #endif
         
-    #if os(macOS)
+        #if os(macOS)
         MenuBarExtra {
             ScrollView {
                 VStack(spacing: 0) {
-                    Text("Zustaendige Notrufe: \(model.missionMarkers.count )\nVerband Notrufe: \(model.missionMarkers.count)")
+                    Text("Zustaendige Notrufe: \(model.missionMarkers.filter { $0.userId == model.getUserID() } .count )\nVerband Notrufe: \(model.missionMarkers.filter { $0.userId != model.getUserID() }.count)")
                 }
             }
         } label: {
             Label("Leistelle", systemImage: "sos.circle")
         }
         .menuBarExtraStyle(.menu)
-    #endif
+        #endif
     }
 }

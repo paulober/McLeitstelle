@@ -1,5 +1,5 @@
 //
-//  Mission.swift
+//  LssMission.swift
 //
 //
 //  Created by Paul on 02.09.23.
@@ -314,6 +314,150 @@ public struct LssRequirements: Codable, Hashable {
         case policeHorse = "police_horse"
         case bikePolice = "bike_police"
         case helicopterBucket = "helicopter_bucket"
+    }
+    
+    public func doesNeedMe(caption: String, type: UInt16) -> Bool {
+        guard let type = VehicleType(rawValue: type) else {
+            print("Unknown type: \(type) for caption: \(caption)")
+            return false
+        }
+        switch type {
+        case .lf:
+            if let firetrucks = self.firetrucks {
+                return firetrucks > 0
+            }
+            
+        case .dlk:
+            if let platformTrucks = self.platformTrucks {
+                return platformTrucks > 0
+            }
+            
+        case .elw1:
+            if let battalionChiefVehicles = self.battalionChiefVehicles {
+                return battalionChiefVehicles > 0
+            }
+            
+        case .rw:
+            if let heavyRescueVehicles = self.heavyRescueVehicles {
+                return heavyRescueVehicles > 0
+            }
+            
+        case .gwA:
+            if let gwSan = self.gwSan {
+                return gwSan > 0
+            }
+            
+        case .gwOil:
+            if let gwoil = self.gwoil {
+                return gwoil > 0
+            }
+            
+        case .gwL2Wasser:
+            if let waterTankers = self.waterTankers {
+                return waterTankers > 0
+            }
+        
+        case .gwMess:
+            if let gwMess = self.gwmess {
+                return gwMess > 0
+            }
+            
+        case .gwGefahrgut:
+            if let hazmatVehicles = self.hazmatVehicles {
+                return hazmatVehicles > 0
+            }
+            
+        case .rtw:
+            if let ambulances = self.ambulances {
+                return ambulances > 0
+            }
+        case .nef:
+            if let ambulances = self.ambulances {
+                return ambulances > 0
+            }
+            
+        case .hlf20:
+            let heavyRescueVehicles = self.heavyRescueVehicles
+            let firetrucks = self.firetrucks
+            
+            if let hrv = heavyRescueVehicles, hrv > 0 {
+                return true
+            }
+            
+            if let ft = firetrucks, ft > 0 {
+                return true
+            }
+            
+            return false
+            
+        case .fuStW:
+            if let policeCars = self.policeCars {
+                return policeCars > 0
+            }
+        case .gwHoehe:
+            if let heightRescueUnits = self.heightRescueUnits {
+                return heightRescueUnits > 0
+            }
+            
+        case .elw2:
+            if let mobileCommandVehicles = self.mobileCommandVehicles {
+                return mobileCommandVehicles > 0
+            }
+            
+        case .ktw:
+            if let ambulances = self.ambulances {
+                return ambulances > 0
+            }
+            
+        case .gkw:
+            if let thwGkw = self.thwGkw {
+                return thwGkw > 0
+            }
+            
+        case .mtwTz:
+            if let thwMtwtz = self.thwMtwtz {
+                return thwMtwtz > 0
+            }
+            
+        case .mzGw:
+            if let thwMzkw = self.thwMzkw {
+                return thwMzkw > 0
+            }
+            
+        case .dekonP:
+            if let hazmatDekon = self.hazmatDekon {
+                return hazmatDekon > 0
+            }
+            
+        case .kdowLNA:
+            if let ambulances = self.ambulances {
+                return ambulances > 0
+            }
+        
+        case .fwk:
+            if let fwk = self.fwk {
+                return fwk > 0
+            }
+        
+        case .mlf:
+            if let firetrucks = self.firetrucks {
+                return firetrucks > 0
+            }
+            
+        case .nea50:
+            // TODO: check
+            return false
+            
+        case .gtlf:
+            if let firetrucks = self.firetrucks {
+                return firetrucks > 0
+            }
+            
+        case .all:
+            return true
+        }
+        
+        return false
     }
 }
 

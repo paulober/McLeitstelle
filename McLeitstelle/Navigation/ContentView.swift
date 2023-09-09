@@ -24,27 +24,29 @@ struct ContentView: View {
         } else {
             NavigationSplitView {
                 Sidebar(model: model, selection: $navSelection)
-                .toolbar {
-                    ToolbarItem {
-                        Button {
-                            
-                            if model.isConnected() {
-                                model.disconnect()
-                            } else {
-                                if model.isSignedIn {
-                                    model.connect()
+                    .toolbar {
+                        ToolbarItem {
+                            Button {
+                                
+                                if model.isConnected() {
+                                    model.disconnect()
+                                } else {
+                                    if model.isSignedIn {
+                                        model.connect()
+                                    }
                                 }
+                            } label: {
+                                Label("Connect", systemImage: model.isConnected() ? "link.icloud" : "icloud.slash")
                             }
-                        } label: {
-                            Label("Connect", systemImage: model.isConnected() ? "link.icloud" : "icloud.slash")
                         }
+                        /*
+                        #if os(iOS)
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            EditButton()
+                        }
+                        #endif
+                        */
                     }
-                    #if os(iOS)
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
-                    }
-                    #endif
-                }
             } detail: {
                 NavigationStack(path: $path) {
                     DetailColumn(selection: $navSelection, model: model)
@@ -55,10 +57,12 @@ struct ContentView: View {
             }
             #if os(macOS)
             .frame(minWidth: 600, minHeight: 450)
+            #elseif os(iOS)
+            .tint(.red)
             #endif
         }
     }
-
+    
     private func addItem() {
         withAnimation {
             let newItem = Item(timestamp: Date())

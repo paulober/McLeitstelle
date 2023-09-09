@@ -52,7 +52,7 @@ internal func scanSignUpHTML() async -> FayeCredentials? {
         }
         
         let html = String(data: data, encoding: .utf8) ?? ""
-        htmlExtractUserDetails(from: html, creds: &creds)
+        htmlExtractUserDetails(from: html, indexHTML: html, creds: &creds)
         
         return creds
     }

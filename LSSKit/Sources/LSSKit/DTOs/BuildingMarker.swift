@@ -56,3 +56,7 @@ public struct BuildingMarker: Codable, Identifiable, Hashable, Equatable {
         return lhs.id == rhs.id && lhs.userId == rhs.userId
     }
 }
+
+public extension BuildingMarker {
+    static let preview = BuildingMarker(id: 1, userId: 1234, name: "Feuerwache 1", longitude: 48.01, latitude: 10.23, icon: "Path to icon", iconOther: "path to other icon", vgi: 12, lbid: 32, showVehiclesAtStartpage: true, level: 1, personalCount: 9, buildingType: LssBuildingType.feuerwache.rawValue, filterId: "feuerwache", detailButton: "No")
+}

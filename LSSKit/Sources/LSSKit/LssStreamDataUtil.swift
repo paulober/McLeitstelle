@@ -11,8 +11,8 @@ import Foundation
 internal func scanFayeData(data: String) -> FayeData {
     var fayeData: FayeData = FayeData()
     
-    // /\{[^{}]*\}/
-    let pattern = /(\w+)\(\s*({?[^{}]*}?)\);/
+    // (\w+)\(\s*({?[^{}]*}?)\);
+    let pattern = /(\w+)\(\s*({?[^;]*}?)\);/
     let matches = data.matches(of: pattern)
     
     let decoder = JSONDecoder()
@@ -22,10 +22,14 @@ internal func scanFayeData(data: String) -> FayeData {
         
         if let jsonData = jsonString.data(using: .utf8) {
             do {
+                // TODO: use equal instead of contains
                 // jsonString.contains("missionMarkerAdd")
                 if methodName.contains("missionMarkerAdd") {
                     let missionMarker = try decoder.decode(MissionMarker.self, from: jsonData)
                     fayeData.newMissionMarkers.append(missionMarker)
+                }  else if methodName == "patientMarkerAddCombined" {
+                    let combinedPatientMarker = try decoder.decode(CombinedPatientMarker.self, from: jsonData)
+                    fayeData.newCombinedPatientMarkers.append(combinedPatientMarker)
                 } else if methodName.contains("patientMarkerAdd") {
                     let patientMarker = try decoder.decode(PatientMarker.self, from: jsonData)
                     fayeData.newPatientMarkers.append(patientMarker)
@@ -61,6 +65,8 @@ internal func scanFayeData(data: String) -> FayeData {
                     } else {
                         print("[LssKit, LssStreamDataUtil] Unable to parse prisoner-ID from prisonerDelete.")
                     }
+                } else {
+                    print("[LssKit, LssStreamDataUtil] Unknown methodName: \(methodName) in json: \(jsonString)")
                 }
             } catch let error as DecodingError {
                 print("[LssKit, LssStreamDataUtil] DecodingError: \(error)\n For methodName: \(methodName) For json: \(jsonString)")

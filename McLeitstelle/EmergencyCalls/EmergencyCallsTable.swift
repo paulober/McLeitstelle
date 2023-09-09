@@ -15,20 +15,21 @@ struct EmergencyCallsTable: View {
     @Binding var searchText: String
     @Binding var ownerFilter: OwnerFilter
     
+    /*
     var missions: [MissionMarker] {
-        model.missionMarkers.filter { mission in
-            (ownerFilter == .all || (ownerFilter == .user
-             ? mission.missionOwnerType == .user
-             : mission.missionOwnerType == .alliance))
-            && mission.matches(searchText: searchText)
-        }
-        .sorted(using: sortOrder)
-    }
+     model.missionMarkers.filter { mission in
+         (ownerFilter == .all || (ownerFilter == .user
+          ? mission.missionOwnerType == .user
+          : mission.missionOwnerType == .alliance))
+         && mission.matches(searchText: searchText)
+     }
+     .sorted(using: sortOrder)
+    }*/
     
     var body: some View {
         Table(selection: $selection, sortOrder: $sortOrder) {
-            TableColumn("Mission") { (mission: MissionMarker) in
-                Text(mission.caption)
+            TableColumn("Mission") { (mission: MissionMarker) in                
+                EmergencyCallRow(missionMarker: mission, imageURL: URL(string: model.relativeLssURLString(path: "/images/\(mission.icon).png"))!)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .layoutPriority(1)
             }
@@ -38,10 +39,22 @@ struct EmergencyCallsTable: View {
                     #if os(macOS)
                     .foregroundStyle(.secondary)
                     #endif
+                    .layoutPriority(0)
+            }
+            
+            TableColumn("Missing") { (mission: MissionMarker) in
+                Text(mission.missingText ?? "N/A")
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         } rows: {
             Section {
-                ForEach(missions) { mission in
+                ForEach(model.missionMarkers.filter { mission in
+                    (ownerFilter == .all || (ownerFilter == .user
+                     ? mission.missionOwnerType == .user
+                     : mission.missionOwnerType == .alliance))
+                    && mission.matches(searchText: searchText)
+                }
+                .sorted(using: sortOrder)) { mission in
                     TableRow(mission)
                 }
             }

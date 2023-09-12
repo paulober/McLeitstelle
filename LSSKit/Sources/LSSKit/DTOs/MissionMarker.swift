@@ -11,13 +11,14 @@ import SwiftUI
 
 public struct MissionMarker: Codable, Identifiable, Equatable {
     public let id: Int
-    public var swStartIn: Int?
-    public var sw: Bool?
+    public var sicherheitsWacheStartIn: Int?
+    public var sicherheitsWache: Bool?
+    // thresshold value (bar stoppt bei tv)
     public var tv: Int?
     /// Id of mission type in einsaetze.json
     public var missionTypeId: UInt16?
     public var missionType: String?
-    public var kt: Bool?
+    public var krankentransport: Bool?
     public var allianceId: Int?
     public var prisonersCount: Int?
     public var patientsCount: Int?
@@ -61,12 +62,12 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
     
     private enum CodingKeys: String, CodingKey {
         case id
-        case swStartIn = "sw_start_in"
-        case sw
+        case sicherheitsWacheStartIn = "sw_start_in"
+        case sicherheitsWache = "sw"
         case tv
         case missionTypeId = "mtid"
         case missionType = "mission_type"
-        case kt
+        case krankentransport = "kt"
         case allianceId = "alliance_id"
         case prisonersCount = "prisoners_count"
         case patientsCount = "patients_count"
@@ -112,12 +113,12 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
     }
     
     public mutating func update(newData: MissionMarker) {
-        self.swStartIn = newData.swStartIn
-        self.sw = newData.sw
+        self.sicherheitsWacheStartIn = newData.sicherheitsWacheStartIn
+        self.sicherheitsWache = newData.sicherheitsWache
         self.tv = newData.tv
         self.missionTypeId = newData.missionTypeId
         self.missionType = newData.missionType
-        self.kt = newData.kt
+        self.krankentransport = newData.krankentransport
         self.allianceId = newData.allianceId
         self.prisonersCount = newData.prisonersCount
         self.patientsCount = newData.patientsCount
@@ -150,12 +151,12 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
 
     
     public init(id: Int,
-                swStartIn: Int?,
-                sw: Bool?,
+                sicherheitsWacheStartIn: Int?,
+                sicherheitsWache: Bool?,
                 tv: Int?,
                 missionTypeId: UInt16?,
                 missionType: String?,
-                kt: Bool?,
+                krankentransport: Bool?,
                 allianceId: Int?,
                 prisonersCount: Int?,
                 patientsCount: Int?,
@@ -186,12 +187,12 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
                 handoff: Bool?) {
         
         self.id = id
-        self.swStartIn = swStartIn
-        self.sw = sw
+        self.sicherheitsWacheStartIn = sicherheitsWacheStartIn
+        self.sicherheitsWache = sicherheitsWache
         self.tv = tv
         self.missionTypeId = missionTypeId
         self.missionType = missionType
-        self.kt = kt
+        self.krankentransport = krankentransport
         self.allianceId = allianceId
         self.prisonersCount = prisonersCount
         self.patientsCount = patientsCount
@@ -226,12 +227,12 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
         let container = try decoder.container(keyedBy: MissionMarker.CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         
-        self.swStartIn = try container.decodeIfPresent(Int.self, forKey: .swStartIn)
-        self.sw = try container.decodeIfPresent(Bool.self, forKey: .sw)
+        self.sicherheitsWacheStartIn = try container.decodeIfPresent(Int.self, forKey: .sicherheitsWacheStartIn)
+        self.sicherheitsWache = try container.decodeIfPresent(Bool.self, forKey: .sicherheitsWache)
         self.tv = try container.decodeIfPresent(Int.self, forKey: .tv)
         self.missionTypeId = try container.decodeIfPresent(UInt16.self, forKey: .missionTypeId)
         self.missionType = try container.decodeIfPresent(String.self, forKey: .missionType)
-        self.kt = try container.decodeIfPresent(Bool.self, forKey: .kt)
+        self.krankentransport = try container.decodeIfPresent(Bool.self, forKey: .krankentransport)
         self.allianceId = try container.decodeIfPresent(Int.self, forKey: .allianceId)
         self.prisonersCount = try container.decodeIfPresent(Int.self, forKey: .prisonersCount)
         self.patientsCount = try container.decodeIfPresent(Int.self, forKey: .patientsCount)
@@ -267,5 +268,5 @@ public struct MissionMarker: Codable, Identifiable, Equatable {
 }
 
 public extension MissionMarker {
-    static let preview = MissionMarker(id: 1, swStartIn: 1, sw: true, tv: 2, missionTypeId: 2, missionType: "Feuer", kt: false, allianceId: 2, prisonersCount: 2, patientsCount: 3, userId: 2, address: "Eine Addresse", vehicleState: 2, missingText: "Nichts fehlt", missingTextShort: "", liveCurrentValue: 2, liveCurrentWaterDamagePumpValue: 3.1, waterDamagePumpValue: 2, pumpingMissionValue: 2, finishUrl: "", dateEnd: 2, pumpingDateStart: 2, pumpingDateEnd: 2, dateNow: Date(), longitude: 48.1, latitude: 10.5, tlng: 12.2, tlat: 1.4, icon: "fire_rot", caption: "Feuer in Schule", captionOld: "", filterId: "", overlayIndex: 2, additiveOverlays: "", handoff: false)
+    static let preview = MissionMarker(id: 1, sicherheitsWacheStartIn: 1, sicherheitsWache: true, tv: 2, missionTypeId: 2, missionType: "Feuer", krankentransport: false, allianceId: 2, prisonersCount: 2, patientsCount: 3, userId: 2, address: "Eine Addresse", vehicleState: 2, missingText: "Nichts fehlt", missingTextShort: "", liveCurrentValue: 2, liveCurrentWaterDamagePumpValue: 3.1, waterDamagePumpValue: 2, pumpingMissionValue: 2, finishUrl: "", dateEnd: 2, pumpingDateStart: 2, pumpingDateEnd: 2, dateNow: Date(), longitude: 48.1, latitude: 10.5, tlng: 12.2, tlat: 1.4, icon: "fire_rot", caption: "Feuer in Schule", captionOld: "", filterId: "", overlayIndex: 2, additiveOverlays: "", handoff: false)
 }

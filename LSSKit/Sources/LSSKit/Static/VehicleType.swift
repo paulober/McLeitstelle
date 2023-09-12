@@ -11,13 +11,15 @@ public enum VehicleCategory: UInt16, CaseIterable, Identifiable {
 }
 
 public enum VehicleType: UInt16, CaseIterable, Identifiable {
-    case lf = 0, dlk = 2, elw1 = 3, rw = 4, gwA = 5, gwOil = 10, gwL2Wasser = 11, gwMess = 12, gwGefahrgut = 27, rtw = 28, nef = 29, hlf20 = 30, fuStW = 32, gwHoehe = 33, elw2 = 34, ktw = 38, gkw = 39, mtwTz = 40, mzGw = 41, dekonP = 53, kdowLNA = 55, fwk = 57, mlf = 89, nea50 = 110, gtlf = 121, all = 65535
+    case lf20 = 0, lf10 = 1, dlk = 2, elw1 = 3, rw = 4, gwA = 5, gwOil = 10, gwL2Wasser = 11, gwMess = 12, gwGefahrgut = 27, rtw = 28, nef = 29, hlf20 = 30, fuStW = 32, gwHoehe = 33, elw2 = 34, tsfW = 37, ktw = 38, gkw = 39, mtwTz = 40, mzGw = 41, dekonP = 53, kdowLNA = 55, kdowOrgL = 56, fwk = 57, tlf4000 = 87, mlf = 89, hlf10 = 90, nea50 = 110, gtlf = 121, all = 65535
     public var id: Self { self }
     
     public func asGermanString() -> String {
         switch self {
-        case .lf:
-            return "Loeschfahrzeug"
+        case .lf20:
+            return "Loeschfahrzeug 20"
+        case .lf10:
+            return "Loeschfahrzeug 10"
         case .dlk:
             return "Drehleiter 25"
         case .elw1:
@@ -47,6 +49,8 @@ public enum VehicleType: UInt16, CaseIterable, Identifiable {
             return "GW-Hoehenrettung"
         case .elw2:
             return "ELW 2"
+        case .tsfW:
+            return "TSF-W"
         case .ktw:
             return "Krankentransportwagen"
         case .gkw:
@@ -59,10 +63,16 @@ public enum VehicleType: UInt16, CaseIterable, Identifiable {
             return "Dekon-P"
         case .kdowLNA:
             return "Komandowagen Leitung Notartz"
+        case .kdowOrgL:
+            return "Komandowagen Organisatorischer Leiter"
         case .fwk:
             return "Feuerwehrkran"
+        case .tlf4000:
+            return "TLF 4000"
         case .mlf:
             return "Mitleres Loeschfahrzeug"
+        case .hlf10:
+            return "Hilfeleistungsloeschfahrzeug 10"
         case .nea50:
             return "NEA50 (Netzersatz)"
         case .gtlf:
@@ -74,7 +84,7 @@ public enum VehicleType: UInt16, CaseIterable, Identifiable {
 }
 
 public let vehicleTypesPerCategory: [VehicleCategory: [VehicleType]] = [
-    VehicleCategory.fd: [.lf, .dlk, .rw, .elw1, .gtlf, .mlf, .hlf20],
+    VehicleCategory.fd: [.lf20, .dlk, .rw, .elw1, .gtlf, .mlf, .hlf20],
     VehicleCategory.fdSpecial: [.gwA, .gwMess, .gwOil, .gwGefahrgut, .gwHoehe, .elw2, .fwk, .dekonP],
     VehicleCategory.rs: [.rtw, .nef, .ktw, .kdowLNA],
     VehicleCategory.pol: [.fuStW],

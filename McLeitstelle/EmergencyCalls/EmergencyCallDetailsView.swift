@@ -53,6 +53,7 @@ struct EmergencyCallDetailsView: View {
     var vehicles: [VehicleContainer] {
         model.vehicles.filter { v in
             ((vehicleTypeFilter == .all && (vehicleCategoryFilter == .all || vehicleCategoryFilter == .onMission))
+             // TODO: unexpectely found nil
              || (vehicleTypeFilter == .all && vehicleTypesPerCategory[vehicleCategoryFilter]!.contains(VehicleType(rawValue: v.vehicleType)!))
              || (vehicleTypeFilter.rawValue == v.vehicleType)
             )
@@ -707,7 +708,7 @@ struct EmergencyCallDetailsView: View {
             // FD
             if vehicleCategoryFilter == .all || vehicleCategoryFilter == .onMission || vehicleCategoryFilter == .fd {
                 Section {
-                    Text("LF").tag(VehicleType.lf)
+                    Text("LF").tag(VehicleType.lf20)
                     Text("DLK").tag(VehicleType.dlk)
                     Text("RW").tag(VehicleType.rw)
                     Text("ELW 1").tag(VehicleType.elw1)

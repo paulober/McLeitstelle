@@ -9,10 +9,11 @@ import Foundation
 
 fileprivate let allianceChatRegex = /allianceChat\(\s*(\{[^{}]+\})\);/
 
-internal func htmlExtractAllianceChats(from html: String) -> [ChatMessage] {
+internal func htmlExtractAllianceChats(from html: String) async -> [ChatMessage] {
     let matches = html.matches(of: allianceChatRegex)
     
     let decoder = JSONDecoder()
+    // TODO: maybe async flatMap
     let chatMessages: [ChatMessage] = matches.compactMap {
         let jsonData = $0.output.1.data(using: String.Encoding.utf8)
         

@@ -12,6 +12,7 @@ public struct FayeCredentials {
     public var rememberUserToken: String
     
     // temp vars
+    // TODO: make Int64
     public var userId: String?
     public var userName: String?
     public var allianceId: String?

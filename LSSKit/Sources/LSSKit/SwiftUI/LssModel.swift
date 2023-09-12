@@ -140,7 +140,7 @@ public class LssModel: ObservableObject {
     }
     
     public func connectAsync() async {
-        let initialData = await self.api?.connect(creds: creds)
+        let initialData = try? await self.api?.connect(creds: creds)
         if let initData = initialData {
             self.creds = initData.creds
             DispatchQueue.main.async {

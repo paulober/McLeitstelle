@@ -10,7 +10,7 @@ import Foundation
 //vehicleDrive\((\{[^{}]+\})\);
 fileprivate let vehicleDriveRegex = /vehicleDrive\((\{.*?\})\);/
 
-internal func htmlExtractVehicleDrives(from html: String) -> [VehicleDrive] {
+internal func htmlExtractVehicleDrives(from html: String) async -> [VehicleDrive] {
     let matches = html.matches(of: vehicleDriveRegex)
     
     let decoder = JSONDecoder()

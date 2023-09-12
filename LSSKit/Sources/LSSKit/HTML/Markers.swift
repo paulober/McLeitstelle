@@ -12,16 +12,16 @@ fileprivate let patientMarkerRegex = /patientMarkerAdd\((\{[^{}]+\})\);/
 fileprivate let patientMarkerAddCombinedRegex = /patientMarkerAddCombined\(\s*({[^;]+})\s*\);/
 fileprivate let buildingMarkerRegex = /buildingMarkerAdd\((\{[^{}]*\})\);/
 
-internal func htmlExtractMarkers(from html: String) -> ([MissionMarker], [PatientMarker], [CombinedPatientMarker], [BuildingMarker]) {
+/*internal func htmlExtractMarkers(from html: String) -> ([MissionMarker], [PatientMarker], [CombinedPatientMarker], [BuildingMarker]) {
     let missionMarkers = htmlExtractMissionMarkers(from: html)
     let patientMarkers = htmlExtractPatientMarkers(from: html)
     let combinedPatientMarkers = htmlExtractCombinedPatientMarkers(from: html)
     let buildingMarkers = htmlExtractBuildingMarkers(from: html)
     
     return (missionMarkers, patientMarkers, combinedPatientMarkers, buildingMarkers)
-}
+}*/
 
-internal func htmlExtractMissionMarkers(from html: String) -> [MissionMarker] {
+internal func htmlExtractMissionMarkers(from html: String) async -> [MissionMarker] {
     let matches = html.matches(of: missionMarkerRegex)
     
     let decoder = JSONDecoder()
@@ -43,7 +43,7 @@ internal func htmlExtractMissionMarkers(from html: String) -> [MissionMarker] {
     return missionMarkers
 }
 
-internal func htmlExtractPatientMarkers(from html: String) -> [PatientMarker] {
+internal func htmlExtractPatientMarkers(from html: String) async -> [PatientMarker] {
     let matches = html.matches(of: patientMarkerRegex)
     
     let decoder = JSONDecoder()
@@ -65,7 +65,7 @@ internal func htmlExtractPatientMarkers(from html: String) -> [PatientMarker] {
     return patientMarkers
 }
 
-internal func htmlExtractCombinedPatientMarkers(from html: String) -> [CombinedPatientMarker] {
+internal func htmlExtractCombinedPatientMarkers(from html: String) async -> [CombinedPatientMarker] {
     let matches = html.matches(of: patientMarkerAddCombinedRegex)
     
     let decoder = JSONDecoder()
@@ -87,7 +87,7 @@ internal func htmlExtractCombinedPatientMarkers(from html: String) -> [CombinedP
     return combinedPatientMarkers
 }
 
-internal func htmlExtractBuildingMarkers(from html: String) -> [BuildingMarker] {
+internal func htmlExtractBuildingMarkers(from html: String) async -> [BuildingMarker] {
     let matches = html.matches(of: buildingMarkerRegex)
     
     let decoder = JSONDecoder()

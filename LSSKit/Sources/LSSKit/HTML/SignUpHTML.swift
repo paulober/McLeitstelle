@@ -52,7 +52,28 @@ internal func scanSignUpHTML() async -> FayeCredentials? {
         }
         
         let html = String(data: data, encoding: .utf8) ?? ""
-        htmlExtractUserDetails(from: html, indexHTML: html, creds: &creds)
+        let userDetails = await htmlExtractUserDetails(from: html, indexHTML: html)
+        for detail in userDetails {
+            switch detail {
+            case .userID(let userID):
+                creds.userId = userID
+            case .userName(let userName):
+                creds.userName = userName
+            case .allianceId(let allianceId):
+                creds.allianceId = allianceId
+            case .extensions(let extensions, let allianceGuid):
+                creds.exts = extensions
+                if let allianceGuid = allianceGuid {
+                    creds.allianceGuid = allianceGuid
+                }
+            case .csrfToken(let csrfToken):
+                creds.csrfToken = csrfToken
+            case .missionSpeed(let missionSpeed):
+                creds.missionSpeed = missionSpeed
+            case .latLong(let lat, let long):
+                creds.mapView = (lat, long)
+            }
+        }
         
         return creds
     }

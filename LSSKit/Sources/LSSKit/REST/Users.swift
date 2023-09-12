@@ -32,7 +32,7 @@ internal func restUsersSignIn(creds: inout FayeCredentials, csrfToken: String, e
     
     let session = URLSession.shared
     
-    if let (data, response) = try? await session.data(for: request),
+    if let (_, response) = try? await session.data(for: request),
        let httpResponse = response as? HTTPURLResponse {
         if httpResponse.statusCode != 302 && httpResponse.statusCode != 200 {
             return false

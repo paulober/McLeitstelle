@@ -27,7 +27,6 @@ struct ContentView: View {
                     .toolbar {
                         ToolbarItem {
                             Button {
-                                
                                 if model.isConnected() {
                                     model.disconnect()
                                 } else {

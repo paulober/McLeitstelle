@@ -58,7 +58,7 @@ struct DashboardView: View {
                 mapView
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .frame(width: metrics.size.width * 2/3)
-                    .toolbar {
+                    /*.toolbar {
                         ToolbarItem {
                             Picker("View", selection: $mapMarkerFilter) {
                                 Text("All").tag(MarkerFilter.all)
@@ -67,7 +67,7 @@ struct DashboardView: View {
                             }
                             .pickerStyle(.segmented)
                         }
-                    }
+                    }*/
                 
                 theTable
                     .frame(maxWidth: .infinity, maxHeight: .infinity)

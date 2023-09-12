@@ -8,6 +8,19 @@
 import Combine
 import Darwin
 
+enum LssAPIError: Error {
+    case downloadIndexHTMLFailed
+}
+
+/*
+ import Foundation
+ let startTime = DispatchTime.now()
+ function()
+ let endTime = DispatchTime.now()
+ let miliseconds = Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000
+ print("Download time-span: \(miliseconds)ms")
+ */
+
 /**
  A communication wrapper for the Leistellenspiel.de
  */
@@ -40,30 +53,56 @@ public class LssAPI {
     /**
      Connects to websocket, refreshes credentials and loads initital data.
      */
-    public func connect(creds: FayeCredentials) async -> LssDTOCollection {
+    public func connect(creds: FayeCredentials) async throws -> LssDTOCollection {
         var initialData: LssDTOCollection = LssDTOCollection(creds: creds)
         
         // set initial cookies for index request
         constructCookies(for: lssBaseURL, creds: initialData.creds)
-        let indexHTML = await downloadIndexHTML(from: lssBaseURL, creds: &initialData.creds)
-        if let indexHTML = indexHTML {
-            let scriptsHTML = htmlReduceToScripts(from: indexHTML)
-            htmlExtractUserDetails(from: scriptsHTML, indexHTML: indexHTML, creds: &initialData.creds)
-            // reconstruct cookies with updated creds
-            constructCookies(for: lssBaseURL, creds: initialData.creds)
-            // TODO: find better solution cause this is also done in FayeClient.init
-            client.authenticate(creds: initialData.creds)
-            
-            initialData.radioMessages = htmlExtractRadioMessages(from: scriptsHTML)
-            initialData.chatMessages = htmlExtractAllianceChats(from: scriptsHTML)
-            (initialData.missionMarkers, initialData.patientMarkers, initialData.combinedPatientMarkers, initialData.buildingMarkers) = htmlExtractMarkers(from: scriptsHTML)
-            initialData.vehicleDrives = htmlExtractVehicleDrives(from: scriptsHTML)
-            
-            self.credentials = initialData.creds
-        } else {
-            // TODO: better handling of this case because then creds.exts are not filled
-            print("[LssKit] Error, unable to retrieve Lss WebApp!")
+        
+        // needed for ext values for faye
+        guard let indexHTML = await downloadIndexHTML(from: lssBaseURL, creds: &initialData.creds) else { throw LssAPIError.downloadIndexHTMLFailed }
+        let scriptsHTML = htmlReduceToScripts(from: indexHTML)
+        
+        async let userDetailsTask = htmlExtractUserDetails(from: scriptsHTML, indexHTML: indexHTML)
+        
+        async let radioMessagesTask = htmlExtractRadioMessages(from: scriptsHTML)
+        async let chatMessagesTask = htmlExtractAllianceChats(from: scriptsHTML)
+        async let missionMarkersTask = htmlExtractMissionMarkers(from: scriptsHTML)
+        async let patientMarkersTask = htmlExtractPatientMarkers(from: scriptsHTML)
+        async let combinedPatientMarkersTask = htmlExtractCombinedPatientMarkers(from: scriptsHTML)
+        async let buildingMarkersTask = htmlExtractBuildingMarkers(from: scriptsHTML)
+        async let vehicleDrivesTask = htmlExtractVehicleDrives(from: scriptsHTML)
+        
+        var userDetails: [UserDetailsResult]
+        (userDetails, initialData.radioMessages, initialData.chatMessages, initialData.missionMarkers, initialData.patientMarkers, initialData.combinedPatientMarkers, initialData.buildingMarkers, initialData.vehicleDrives) = await (userDetailsTask, radioMessagesTask, chatMessagesTask, missionMarkersTask, patientMarkersTask, combinedPatientMarkersTask, buildingMarkersTask, vehicleDrivesTask)
+        
+        for detail in userDetails {
+            switch detail {
+            case .userID(let userID):
+                initialData.creds.userId = userID
+            case .userName(let userName):
+                initialData.creds.userName = userName
+            case .allianceId(let allianceId):
+                initialData.creds.allianceId = allianceId
+            case .extensions(let extensions, let allianceGuid):
+                initialData.creds.exts = extensions
+                if let allianceGuid = allianceGuid {
+                    initialData.creds.allianceGuid = allianceGuid
+                }
+            case .csrfToken(let csrfToken):
+                initialData.creds.csrfToken = csrfToken
+            case .missionSpeed(let missionSpeed):
+                initialData.creds.missionSpeed = missionSpeed
+            case .latLong(let lat, let long):
+                initialData.creds.mapView = (lat, long)
+            }
         }
+        
+        self.credentials = initialData.creds
+        // reconstruct cookies with updated creds
+        constructCookies(for: lssBaseURL, creds: initialData.creds)
+        // TODO: find better solution cause this is also done in FayeClient.init
+        client.authenticate(creds: initialData.creds)
         
         client.resume()
         startReceivingMessages()

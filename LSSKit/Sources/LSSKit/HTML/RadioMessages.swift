@@ -11,10 +11,11 @@ import RegexBuilder
 // TODO: maybe /radioMessage\((.*)\);/ because the current regex would not allow if the json contains a object {}
 fileprivate let radioMessageRegex = /radioMessage\((\{[^{}]+\})\);/
 
-internal func htmlExtractRadioMessages(from html: String) -> [RadioMessage] {
+internal func htmlExtractRadioMessages(from html: String) async -> [RadioMessage] {
     let matches = html.matches(of: radioMessageRegex)
     
     let decoder = JSONDecoder()
+    // TODO: maybe use async flatMap
     let radioMessages: [RadioMessage] = matches.compactMap {
         let jsonData = $0.output.1.data(using: String.Encoding.utf8)
         

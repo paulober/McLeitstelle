@@ -322,7 +322,12 @@ public struct LssRequirements: Codable, Hashable {
             return false
         }
         switch type {
-        case .lf:
+        case .lf20:
+            if let firetrucks = self.firetrucks {
+                return firetrucks > 0
+            }
+            
+        case .lf10:
             if let firetrucks = self.firetrucks {
                 return firetrucks > 0
             }
@@ -404,6 +409,11 @@ public struct LssRequirements: Codable, Hashable {
                 return mobileCommandVehicles > 0
             }
             
+        case .tsfW:
+            if let firetrucks = self.firetrucks {
+                return firetrucks > 0
+            }
+            
         case .ktw:
             if let ambulances = self.ambulances {
                 return ambulances > 0
@@ -433,13 +443,28 @@ public struct LssRequirements: Codable, Hashable {
             if let ambulances = self.ambulances {
                 return ambulances > 0
             }
+            
+        case .kdowOrgL:
+            if let kdowOrgl = self.kdowOrgl {
+                return kdowOrgl > 0
+            }
         
         case .fwk:
             if let fwk = self.fwk {
                 return fwk > 0
             }
+            
+        case .tlf4000:
+            if let waterTankers = self.waterTankers {
+                return waterTankers > 0
+            }
         
         case .mlf:
+            if let firetrucks = self.firetrucks {
+                return firetrucks > 0
+            }
+            
+        case .hlf10:
             if let firetrucks = self.firetrucks {
                 return firetrucks > 0
             }
@@ -449,8 +474,10 @@ public struct LssRequirements: Codable, Hashable {
             return false
             
         case .gtlf:
-            if let firetrucks = self.firetrucks {
-                return firetrucks > 0
+            if let firetrucks = self.firetrucks, firetrucks > 0 {
+                return true
+            } else if let waterTankers = self.waterTankers, waterTankers > 0 {
+                return true
             }
             
         case .all:

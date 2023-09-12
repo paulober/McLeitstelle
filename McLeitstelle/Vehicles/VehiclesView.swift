@@ -94,7 +94,7 @@ struct VehiclesView: View {
             
             // FD
             Section {
-                Text("LF (FW)").tag(VehicleType.lf)
+                Text("LF (FW)").tag(VehicleType.lf20)
                 Text("DLK (FW)").tag(VehicleType.dlk)
                 Text("RW (FW)").tag(VehicleType.rw)
                 Text("GW-A (FW)").tag(VehicleType.gwA)

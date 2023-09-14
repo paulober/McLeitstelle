@@ -38,18 +38,20 @@ struct VehicleRowView: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.trailing)
             
+            // for imageset 1 use 1.2
             AsyncImage(url: imageURL, scale: 1.2)
                 .padding(2)
-                .frame(width: 70, height: 40)
+                .frame(width: 80, height: 40)
                 .padding(.vertical)
                 .padding(.trailing, 2)
         }
         #else
         HStack {
             //let iconShape = RoundedRectangle(cornerRadius: 4, style: .continuous)
-            AsyncImage(url: imageURL, scale: 1.6)
+            // for imageset 1 use 1.6
+            AsyncImage(url: imageURL, scale: 1.7)
                 .padding(2)
-                .frame(width: 50, height: 30)
+                .frame(width: 70, height: 30)
                 .padding(.bottom, 5)
                 /*.background(in: iconShape)
                 .overlay {

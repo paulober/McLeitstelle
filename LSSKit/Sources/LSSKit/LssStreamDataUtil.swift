@@ -24,6 +24,7 @@ internal func scanFayeData(data: String) -> FayeData {
             do {
                 // TODO: use equal instead of contains
                 // jsonString.contains("missionMarkerAdd")
+                // TODO: missionSpeed(...) method support is returned as response to rest mission speed change
                 if methodName.contains("missionMarkerAdd") {
                     let missionMarker = try decoder.decode(MissionMarker.self, from: jsonData)
                     fayeData.newMissionMarkers.append(missionMarker)

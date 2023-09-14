@@ -45,11 +45,12 @@ public struct LssVehicle: Codable, Identifiable, Hashable, Equatable {
     public let vehicleType: UInt16
     public var fmsReal: Int
     public let fmsShow: Int
+    // should be always != nil but for savety make it nullable
     public let vehicleTypeCaption: String?
-    public let workingHourStart: Int
-    public let workingHourEnd: Int
-    public let alarmDelay: Int
-    public let maxPersonnelOverride: Int?
+    public let workingHourStart: UInt8
+    public let workingHourEnd: UInt8
+    public let alarmDelay: UInt16
+    public let maxPersonnelOverride: UInt8?
     public let assignedPersonnelCount: Int = 0
     public let ignoreAao: Bool
     public let targetType: String? // Use an enum if there are specific values

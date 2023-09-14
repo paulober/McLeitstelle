@@ -28,6 +28,27 @@ internal func restSendPatientToHospital(csrfToken: String, vehicleId: Int, hospi
     return false
 }
 
+internal func restSendPrisonerToStation(csrfToken: String, vehicleId: Int, stationId: Int) async -> Bool {
+    let url = lssIVehiclesURL(vehicleId).appendingPathComponent("gefangener/\(stationId)")
+    
+    var request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 5.0)
+    getDefaultHeaderWithContentTypeForm(request: &request, csrfToken: csrfToken, url: url)
+    
+    if let (_, response) = try? await session.data(for: request) {
+        if let httpResponse = response as? HTTPURLResponse {
+            if httpResponse.statusCode == 200 {
+                return true
+            } else {
+                print("[LssKit, restSendPrisonerToStation] Sending prisoner to station failed.")
+            }
+        }
+    } else {
+        print("[LssKit, restSendPrisonerToStation] Error on-request.")
+    }
+    
+    return false
+}
+
 internal func restBackalarmVehicle(_ vehicleId: Int, csrfToken: String, missionId: Int? = nil) async -> Bool {
     let url = lssBaseURL.appendingPathComponent("vehicles/\(vehicleId)/backalarm").appending(queryItems: [URLQueryItem(name: "return", value: "mission_js")])
     var request = URLRequest(url: url)

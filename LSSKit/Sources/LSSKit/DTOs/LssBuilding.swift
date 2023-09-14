@@ -1,5 +1,5 @@
 //
-//  Building.swift
+//  LssBuilding.swift
 //
 //
 //  Created by Paul on 02.09.23.
@@ -11,24 +11,16 @@ public struct LssBuildingExtension: Codable, Hashable {
     public let caption: String
     public let enabled: Bool
     public let typeId: Int
-
-    public struct Availability: Codable, Hashable {
-        public let available: Bool
-        public let availableAt: String?
-        
-        private enum CodingKeys: String, CodingKey {
-            case available
-            case availableAt = "available_at"
-        }
-    }
     
-    public let availability: Availability
+    public let available: Bool
+    public let availableAt: String?
     
     private enum CodingKeys: String, CodingKey {
         case caption
         case enabled
         case typeId = "type_id"
-        case availability
+        case available
+        case availableAt = "available_at"
     }
 }
 
@@ -55,6 +47,7 @@ public struct LssBuilding: Codable, Identifiable, Hashable {
     public let id: Int
     public let personalCount: Int
     public let level: Int
+    /// 2 = Rettungswache,  6 = Polizeiwache, THW = 9
     public let buildingType: Int
     public let caption: String
     public let latitude: Double
@@ -64,17 +57,27 @@ public struct LssBuilding: Codable, Identifiable, Hashable {
     public let leitstelleBuildingId: Int?
     public let smallBuilding: Bool
     public let enabled: Bool
-    public let generateOwnMissions: Bool
+    public let generateOwnMissions: Bool?
     public let personalCountTarget: Int
     public let hiringPhase: Int
     public let hiringAutomatic: Bool
     public let customIconUrl: String?
-    public let specialization: [LssBuildingSpecialization]
-    public let isAllianceShared: Bool
-    public let allianceShareCreditsPercentage: Double
-    public let patientCount: Int
-    public let prisonerCount: Int
+    public let specialization: [LssBuildingSpecialization]?
+    public let isAllianceShared: Bool?
+    public let allianceShareCreditsPercentage: Double?
+    public let patientCount: UInt16?
+    public let prisonerCount: UInt16?
     public let generatesMissionCategories: [String]
+    
+    public var freeCells: UInt16 {
+        // count is expected to be equal or greater than 0
+        //buildingType == 6 not needed because prisonerCount != nil does have the same effect
+        if let pCount = prisonerCount {
+            return UInt16(extensions.filter { $0.caption == "Zelle" }.count) - pCount
+        } else {
+            return 0
+        }
+    }
 
     private enum CodingKeys: String, CodingKey {
         case id

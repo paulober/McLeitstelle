@@ -13,8 +13,8 @@ public struct RadioMessage: Codable, Identifiable, Hashable, Equatable {
     public let type: String
     /// Equals to vehicle id if type == "vehicle_fms"
     public let id: Int
-    public let fmsReal: Int
-    public let fms: Int
+    public let fmsReal: UInt8
+    public let fms: UInt8
     public let fmsText: String
     public let caption: String
     

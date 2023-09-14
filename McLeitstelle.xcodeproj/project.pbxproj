@@ -471,7 +471,9 @@
 		B19ADC222AA0F6E30013B88C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon macOS";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = "AppIcon iOS";
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = "AppIcon macOS";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = McLeitstelle/McLeitstelle.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -511,7 +513,9 @@
 		B19ADC232AA0F6E30013B88C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon macOS";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=iphoneos*]" = "AppIcon iOS";
+				"ASSETCATALOG_COMPILER_APPICON_NAME[sdk=macosx*]" = "AppIcon macOS";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = McLeitstelle/McLeitstelle.entitlements;
 				CODE_SIGN_STYLE = Automatic;

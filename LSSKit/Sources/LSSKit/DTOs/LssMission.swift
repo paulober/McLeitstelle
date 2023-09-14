@@ -429,9 +429,52 @@ public struct LssRequirements: Codable, Hashable {
                 return thwMtwtz > 0
             }
             
+        case .mtwOv:
+            if let thwMzkw = self.thwMzkw, thwMzkw > 0 {
+                return true
+            }
+            if let thwMtwtz = self.thwMtwtz, thwMtwtz > 0 {
+                return true
+            }
+            
         case .mzGw:
-            if let thwMzkw = self.thwMzkw {
-                return thwMzkw > 0
+            if let thwMzkw = self.thwMzkw, thwMzkw > 0 {
+                return true
+            }
+            if let thwMtwtz = self.thwMtwtz, thwMtwtz > 0 {
+                return true
+            }
+            
+        case .tkw:
+            if let thwMzkw = self.thwMzkw, thwMzkw > 0 {
+                return true
+            }
+            if let thwMtwtz = self.thwMtwtz, thwMtwtz > 0 {
+                return true
+            }
+            if let thwLkw = self.thwLkw, thwLkw > 0 {
+                return true
+            }
+            
+    
+        case .lkw7Lkr19Tm:
+            if let thwLkw = self.thwLkw {
+                return thwLkw > 0
+            }
+            
+        case .anhMzB:
+            if let thwLkw = self.thwLkw {
+                return thwLkw > 0
+            }
+            
+        case .anhMzAB:
+            if let thwLkw = self.thwLkw {
+                return thwLkw > 0
+            }
+            
+        case .anhSchlB:
+            if let thwLkw = self.thwLkw {
+                return thwLkw > 0
             }
             
         case .dekonP:
@@ -467,6 +510,11 @@ public struct LssRequirements: Codable, Hashable {
         case .hlf10:
             if let firetrucks = self.firetrucks {
                 return firetrucks > 0
+            }
+            
+        case .dhuUFueKw:
+            if let rescueDogUnits = self.rescueDogUnits {
+                return rescueDogUnits > 0
             }
             
         case .nea50:

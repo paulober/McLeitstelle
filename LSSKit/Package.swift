@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "LssKit",
-    platforms: [.macOS("14.0"), .iOS("17.0")],
+    platforms: [.macOS(.v14), .iOS(.v17)],
     products: [
         .library(
             name: "LssKit",

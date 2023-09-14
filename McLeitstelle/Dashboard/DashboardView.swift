@@ -182,10 +182,14 @@ struct DashboardView: View {
             }
             
             TableColumn("Content", value: \.fmsText) { radioMessage in
-                Text(radioMessage.fmsText)
-                    #if os(macOS)
-                    .foregroundStyle(.secondary)
-                    #endif
+                if radioMessage.fms == FMSStatus.sprechwunsch.rawValue {
+                    Text(radioMessage.fmsText)
+                        .font(.callout.italic())
+                        .foregroundStyle(.red)
+                } else {
+                    Text(radioMessage.fmsText)
+                        .foregroundStyle(.secondary)
+                }
             }
             
             TableColumn("Mission", value: \.optionalMissionId) { radioMessage in

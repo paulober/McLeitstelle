@@ -44,9 +44,15 @@ struct EmergencyCallDetailsView: View {
     @State private var vehicleCategoryFilter: VehicleCategory = .all
     @State private var liveMissionDetails: LiveMissionDetails?
     @State private var rtwTransportDetails: RtwTransportDetails?
-    @State private var showRtwTransportDialog: Bool = false
+    @State private var prisonerTransportVehicleId: Int?
     @State private var showMissionDetailsSheet: Bool = false
+    
+    @State private var showRtwTransportDialog: Bool = false
     @State private var showMassPatientManagementSheet: Bool = false
+    
+    @State private var showPrisonerTransportDialog: Bool = false
+    @State private var showPrisonerManagementSheet: Bool = false
+    
     @State private var einsatzDetails: MissionEinsatzDetails?
     @State private var isAdditionalDetailsExpanded: Bool = false
     
@@ -54,7 +60,7 @@ struct EmergencyCallDetailsView: View {
         model.vehicles.filter { v in
             ((vehicleTypeFilter == .all && (vehicleCategoryFilter == .all || vehicleCategoryFilter == .onMission))
              // TODO: unexpectely found nil
-             || (vehicleTypeFilter == .all && vehicleTypesPerCategory[vehicleCategoryFilter]!.contains(VehicleType(rawValue: v.vehicleType)!))
+             || (vehicleTypeFilter == .all && isVehicleTypeInCategory(v.vehicleType, category: vehicleCategoryFilter))
              || (vehicleTypeFilter.rawValue == v.vehicleType)
             )
             && v.matches(searchText: searchText)
@@ -212,11 +218,17 @@ struct EmergencyCallDetailsView: View {
         .sheet(isPresented: $showRtwTransportDialog) {
             rtwTransportSheet
         }
+        .sheet(isPresented: $showPrisonerTransportDialog) {
+            prisonerTransportSheet
+        }
         .sheet(isPresented: $showMissionDetailsSheet) {
             missionDetailsView
         }
         .sheet(isPresented: $showMassPatientManagementSheet) {
             massPatientManagementView
+        }
+        .sheet(isPresented: $showPrisonerManagementSheet) {
+            prisonerManagementSheet
         }
     }
     
@@ -344,6 +356,11 @@ struct EmergencyCallDetailsView: View {
                             .padding()
                             
                             Text(patient.name)
+                            
+                            if let missingText = patient.missingText, !missingText.isEmpty {
+                                Text(missingText)
+                                    .foregroundStyle(Color.orange.opacity(0.7))
+                            }
                         }
                     }
                     .buttonStyle(.plain)
@@ -442,6 +459,15 @@ struct EmergencyCallDetailsView: View {
         }
     }
     
+    private func imageUrl(for vehicle: LssVehicle) -> String {
+        let idx = Int(vehicle.vehicleType)
+        if vehicleImageUrlStrings.count > idx {
+            return vehicleImageUrlStrings[Int(vehicle.vehicleType)]?[0] ?? model.relativeLssURLString(path: vehicle.imageUrlStatic)
+        } else {
+            return model.relativeLssURLString(path: vehicle.imageUrlStatic)
+        }
+    }
+    
     @ViewBuilder
     var assetsTableView: some View {
         Table(selection: $selection, sortOrder: $sortOrder) {
@@ -454,7 +480,7 @@ struct EmergencyCallDetailsView: View {
                         .background(.orange.opacity(0.1))
                         .cornerRadius(8)
                 } else {
-                    VehicleRowView(vContainer: v, imageURL: URL(string: vehicleImageUrlStrings[Int(v.vehicle.vehicleType)]?[0] ?? model.relativeLssURLString(path: v.vehicle.imageUrlStatic))!)
+                    VehicleRowView(vContainer: v, imageURL: URL(string: imageUrl(for: v.vehicle))!)
                         #if os(macOS)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         #endif
@@ -554,6 +580,57 @@ struct EmergencyCallDetailsView: View {
         }
     }
     
+    // TODO: merge with rtwTransportSheet
+    // TODO: put into seperate file with own state for holding cells
+    @ViewBuilder
+    var prisonerTransportSheet: some View {
+        VStack {
+            if let transportVehicleId = prisonerTransportVehicleId {
+                HStack {
+                    Spacer()
+                    Button {
+                        showPrisonerTransportDialog = false
+                    } label: {
+                        Text("Close")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    #if os(iOS)
+                    .padding(.top)
+                    .padding(.trailing)
+                    #endif
+                }
+                
+                List {
+                    ForEach(model.buildings.filter { $0.buildingType == 6 && $0.freeCells > 0 }.sorted(by: {
+                        Coordinate(latitude: $0.latitude, longitude: $0.longitude).distance(to: missionCord) < Coordinate(latitude: $1.latitude, longitude: $1.longitude).distance(to: missionCord)
+                    }), id: \.id) { station in
+                        Button(action: {
+                            // Handle station selection here
+                            
+                            Task {
+                                DispatchQueue.main.async {
+                                    showPrisonerTransportDialog = false // Close the sheet
+                                    dismissAction.callAsFunction()
+                                }
+                                _ = await model.sendPrisonerToStation(vehicleId: transportVehicleId, stationId: station.id)
+                            }
+                        }) {
+                            HStack {
+                                Text("Name: \(station.caption); Distance: \(Coordinate(latitude: station.latitude, longitude: station.longitude).distance(to: missionCord).formatted()); Free Holding-Cells: \(String(station.freeCells)); IsMine: true")
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+            } else {
+                Text("No transport selected!")
+            }
+        }
+        #if os(macOS)
+        .frame(minWidth: 300, maxWidth: 500, minHeight: 400, maxHeight: 600)
+        #endif
+    }
+    
     @ViewBuilder
     var rtwTransportSheet: some View {
         VStack {
@@ -594,6 +671,51 @@ struct EmergencyCallDetailsView: View {
             } else {
                 Text("No hospitals found!")
             }
+        }
+        #if os(macOS)
+        .frame(minWidth: 300, maxWidth: 500, minHeight: 400, maxHeight: 600)
+        #endif
+    }
+    
+    @ViewBuilder
+    var prisonerManagementSheet: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button {
+                    showPrisonerManagementSheet = false
+                } label: {
+                    Label("Close", systemImage: "xmark")
+                }
+            }
+            .frame(alignment: .topTrailing)
+            .padding(.trailing)
+            .padding(.vertical)
+            
+            let userId = model.getUserID()
+            
+            // TODO: extract into computed property
+            List(model.radioMessages.filter {
+                if let missionId = $0.missionId {
+                    return mission.id == missionId && $0.fms == FMSStatus.sprechwunsch.rawValue && $0.type == "vehicle_fms" && $0.userId == userId
+                } else {
+                    return false
+                }
+            }, id: \.self) { message in
+                Button {
+                    // show transport dialog
+                    prisonerTransportVehicleId = message.id
+                    showPrisonerManagementSheet = false
+                    showPrisonerTransportDialog = true
+                } label: {
+                    Text(message.caption)
+                }
+            }
+            .frame(alignment: .top)
+        }
+        .onAppear {
+            // refresh to get current holding-cells occupancies
+            model.fetchBuildings()
         }
         #if os(macOS)
         .frame(minWidth: 300, maxWidth: 500, minHeight: 400, maxHeight: 600)
@@ -644,6 +766,9 @@ struct EmergencyCallDetailsView: View {
             }
             .frame(alignment: .top)
         }
+        #if os(macOS)
+        .frame(minWidth: 300, maxWidth: 500, minHeight: 400, maxHeight: 600)
+        #endif
     }
     
     @ViewBuilder
@@ -670,14 +795,22 @@ struct EmergencyCallDetailsView: View {
             Label("Alarm", systemImage: "bell.and.waves.left.and.right")
         }
         
-        #if os(iOS)
         Button {
             showMassPatientManagementSheet = true
         } label: {
-            Label("Radio", systemImage: "phone.arrow.up.right")
+            Label("Patients Radio", systemImage: "phone.arrow.up.right")
         }
         .disabled(combinedPatientMarkers.isEmpty)
         
+        Button {
+            showPrisonerManagementSheet = true
+        } label: {
+            Label("Prisoner Radio", systemImage: "door.left.hand.open")
+        }
+        //.disabled(model.prisonerMarkers.isEmpty)
+        .disabled(!model.radioMessages.contains(where: { ($0.missionId ?? 0) == mission.id && $0.fms == FMSStatus.sprechwunsch.rawValue }))
+        
+        #if os(iOS)
         Button {
             showMissionDetailsSheet = true
         } label: {
@@ -708,13 +841,17 @@ struct EmergencyCallDetailsView: View {
             // FD
             if vehicleCategoryFilter == .all || vehicleCategoryFilter == .onMission || vehicleCategoryFilter == .fd {
                 Section {
-                    Text("LF").tag(VehicleType.lf20)
+                    Text("LF-10").tag(VehicleType.lf10)
+                    Text("LF-20").tag(VehicleType.lf20)
                     Text("DLK").tag(VehicleType.dlk)
                     Text("RW").tag(VehicleType.rw)
                     Text("ELW 1").tag(VehicleType.elw1)
                     Text("GTLF").tag(VehicleType.gtlf)
                     Text("MLF").tag(VehicleType.mlf)
+                    Text("HLF-10").tag(VehicleType.hlf10)
                     Text("HLF-20").tag(VehicleType.hlf20)
+                    Text("TLF-4000").tag(VehicleType.tlf4000)
+                    Text("TSF-W").tag(VehicleType.tsfW)
                 } header: {
                     Text("Feuerwehr")
                 }
@@ -722,6 +859,7 @@ struct EmergencyCallDetailsView: View {
             
             if vehicleCategoryFilter == .all || vehicleCategoryFilter == .onMission || vehicleCategoryFilter == .fdSpecial {
                 Section {
+                    Text("GW-L2-Wasser").tag(VehicleType.gwL2Wasser)
                     Text("GW-Atemschutz").tag(VehicleType.gwA)
                     Text("GW-Mess").tag(VehicleType.gwMess)
                     Text("GW-Oil").tag(VehicleType.gwOil)
@@ -742,6 +880,7 @@ struct EmergencyCallDetailsView: View {
                     Text("NEF").tag(VehicleType.nef)
                     Text("KTW").tag(VehicleType.ktw)
                     Text("Kdow-LNA").tag(VehicleType.kdowLNA)
+                    Text("Kdow-OrgL").tag(VehicleType.kdowOrgL)
                 } header: {
                     Text("Rettungsdienst")
                 }
@@ -751,8 +890,9 @@ struct EmergencyCallDetailsView: View {
             if vehicleCategoryFilter == .all || vehicleCategoryFilter == .onMission || vehicleCategoryFilter == .pol || vehicleCategoryFilter == .bPol {
                 Section {
                     Text("FuStW").tag(VehicleType.fuStW)
+                    Text("DHuFüKw").tag(VehicleType.dhuUFueKw)
                 } header: {
-                    Text("Bundespolizei")
+                    Text("Polizei")
                 }
             }
             
@@ -761,16 +901,19 @@ struct EmergencyCallDetailsView: View {
                 Section {
                     Text("GKW").tag(VehicleType.gkw)
                     Text("MTW-TZ").tag(VehicleType.mtwTz)
+                    Text("MTW-OV").tag(VehicleType.mtwOv)
                     Text("MzGw (Fr N)").tag(VehicleType.mzGw)
-                    Text("NEA50 [A]").tag(VehicleType.nea50)
+                    Text("NEA50 [A-MzGw]").tag(VehicleType.nea50)
+                    Text("Tauchkraftwagen").tag(VehicleType.tkw)
+                    Text("LKW 7 Lkr 19 tm").tag(VehicleType.lkw7Lkr19Tm)
+                    Text("Anh MzB [A-LKW7]").tag(VehicleType.anhMzB)
+                    Text("Anh MzAB [A-LKW7]").tag(VehicleType.anhMzAB)
+                    Text("Anh SchlB [A-LKW7]").tag(VehicleType.anhSchlB)
                 } header: {
                     Text("THW")
                 }
             }
         }
-        #if os(iOS)
-        .pickerStyle(.segmented)
-        #endif
     }
 }
 

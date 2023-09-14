@@ -22,6 +22,7 @@ public class LssModel: ObservableObject {
     @Published public var radioMessages: [RadioMessage] = []
     @Published public var chatMessages: [ChatMessage] = []
     @Published public var vehicles: [LssVehicle] = []
+    @Published public var buildings: [LssBuilding] = []
     @Published public var credits: LssCredits = LssCredits.preview
     @Published public var missionSpeed: MissionSpeedValues = .pause
     
@@ -168,7 +169,11 @@ public class LssModel: ObservableObject {
             }
         }
         subscribeToFayeData()
-        getVehicles()
+        let fetchDataStart = DispatchTime.now()
+        self.fetchVehicles()
+        self.fetchBuildings()
+        let fetchDataEnd = DispatchTime.now()
+        print("[LssModel] Fetched vehicles and buildings in \(Double(fetchDataEnd.uptimeNanoseconds - fetchDataStart.uptimeNanoseconds) / 1_000_000.0) ms")
         startCreditsTimer()
     }
     
@@ -225,6 +230,20 @@ public class LssModel: ObservableObject {
                 fatalError()
             }
             return self.vehicles[index] = newValue
+        }
+    }
+    
+    public func lssBuildingBinding(for id: LssBuilding.ID) -> Binding<LssBuilding> {
+        Binding<LssBuilding> {
+            guard let index = self.buildings.firstIndex(where: { $0.id == id }) else {
+                fatalError()
+            }
+            return self.buildings[index]
+        } set: { newValue in
+            guard let index = self.buildings.firstIndex(where: { $0.id == id }) else {
+                fatalError()
+            }
+            return self.buildings[index] = newValue
         }
     }
     
@@ -330,7 +349,7 @@ public class LssModel: ObservableObject {
         return einsaetze[mtId]
     }
     
-    public func getVehicles() {
+    public func fetchVehicles() {
         fetchData(LssEndpoint.urlForV2Vehicles(), responseType: LssVehiclesResponseData.self)
             //.receive(on: RunLoop.main)
             .receive(on: DispatchQueue.main)
@@ -346,6 +365,22 @@ public class LssModel: ObservableObject {
             }, receiveValue: { responseObject in
                 // Handle the responseObject of type [LssVehicle]
                 self.vehicles = responseObject.result
+            })
+            .store(in: &cancellables)
+    }
+    
+    public func fetchBuildings() {
+        fetchData(LssEndpoint.urlForBuildings(), responseType: [LssBuilding].self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    print("[LssKit, LssModel, getBuildings] Finished")
+                case .failure(let error):
+                    print("[LssKit, LssModel, getBuildings] Error: \(error)")
+                }
+            }, receiveValue: { responseObject in
+                self.buildings = responseObject
             })
             .store(in: &cancellables)
     }
@@ -435,7 +470,7 @@ public class LssModel: ObservableObject {
             // start delay of vehicle
             // TODO: only fetch vehicles from vehicleIds with vehiclesMap but may be bad because of GKW for NEA50
             DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-                self.getVehicles()
+                self.fetchVehicles()
             }
             return true
         }
@@ -464,6 +499,10 @@ public class LssModel: ObservableObject {
     
     public func sendPatientToHospital(vehicleId: Int, hospitalId: Int) async -> Bool {
         return await restSendPatientToHospital(csrfToken: creds.csrfToken ?? "", vehicleId: vehicleId, hospitalId: hospitalId)
+    }
+    
+    public func sendPrisonerToStation(vehicleId: Int, stationId: Int) async -> Bool {
+        return await restSendPrisonerToStation(csrfToken: creds.csrfToken ?? "", vehicleId: vehicleId, stationId: stationId)
     }
     
     public func setMissionSpeed(speed: UInt8) async -> Bool {

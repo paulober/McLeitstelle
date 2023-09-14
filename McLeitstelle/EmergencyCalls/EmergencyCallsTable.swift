@@ -43,7 +43,7 @@ struct EmergencyCallsTable: View {
             }
             
             TableColumn("Missing") { (mission: MissionMarker) in
-                Text(mission.missingText ?? "N/A")
+                Text(mission.missingText ?? model.patientMarkers.filter { $0.missionId == mission.id }.compactMap { $0.missingText }.joined(separator: " || ") + " => N/A")
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         } rows: {

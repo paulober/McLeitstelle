@@ -497,6 +497,11 @@ public struct LssRequirements: Codable, Hashable {
                 return fwk > 0
             }
             
+        case .naw:
+            if let ambulances = self.ambulances {
+                return ambulances > 0
+            }
+            
         case .tlf4000:
             if let waterTankers = self.waterTankers {
                 return waterTankers > 0

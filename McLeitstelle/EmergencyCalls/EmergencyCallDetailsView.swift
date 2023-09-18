@@ -878,6 +878,7 @@ struct EmergencyCallDetailsView: View {
                 Section {
                     Text("RTW").tag(VehicleType.rtw)
                     Text("NEF").tag(VehicleType.nef)
+                    Text("NAW").tag(VehicleType.naw)
                     Text("KTW").tag(VehicleType.ktw)
                     Text("Kdow-LNA").tag(VehicleType.kdowLNA)
                     Text("Kdow-OrgL").tag(VehicleType.kdowOrgL)

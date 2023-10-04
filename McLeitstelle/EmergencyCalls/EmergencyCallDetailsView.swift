@@ -17,6 +17,10 @@ struct VehicleContainer: Identifiable {
     let distanceInKm: Double
 }
 
+enum AssetSelectorMode {
+    case simple, complex
+}
+
 struct EmergencyCallDetailsView: View {
     @ObservedObject var model: LssModel
     @Binding var mission: MissionMarker
@@ -39,6 +43,8 @@ struct EmergencyCallDetailsView: View {
     
     @State private var sortOrder = [KeyPathComparator(\VehicleContainer.distanceInKm, order: .forward)]
     @State private var selection: Set<VehicleContainer.ID> = []
+    @State private var typeSelection: Set<VehicleType.ID> = []
+    @State private var selectorMode: AssetSelectorMode = .simple
     @State private var searchText: String = ""
     @State private var vehicleTypeFilter: VehicleType = .all
     @State private var vehicleCategoryFilter: VehicleCategory = .all
@@ -46,6 +52,7 @@ struct EmergencyCallDetailsView: View {
     @State private var rtwTransportDetails: RtwTransportDetails?
     @State private var prisonerTransportVehicleId: Int?
     @State private var showMissionDetailsSheet: Bool = false
+    @State private var isSearch: Bool = false
     
     @State private var showRtwTransportDialog: Bool = false
     @State private var showMassPatientManagementSheet: Bool = false
@@ -54,12 +61,12 @@ struct EmergencyCallDetailsView: View {
     @State private var showPrisonerManagementSheet: Bool = false
     
     @State private var einsatzDetails: MissionEinsatzDetails?
+    @State private var missionUnitsRequirement: MissionUinitsRequirement?
     @State private var isAdditionalDetailsExpanded: Bool = false
     
     var vehicles: [VehicleContainer] {
         model.vehicles.filter { v in
             ((vehicleTypeFilter == .all && (vehicleCategoryFilter == .all || vehicleCategoryFilter == .onMission))
-             // TODO: unexpectely found nil
              || (vehicleTypeFilter == .all && isVehicleTypeInCategory(v.vehicleType, category: vehicleCategoryFilter))
              || (vehicleTypeFilter.rawValue == v.vehicleType)
             )
@@ -127,6 +134,7 @@ struct EmergencyCallDetailsView: View {
         
         DispatchQueue.main.async {
             einsatzDetails = result
+            missionUnitsRequirement = einsatzDetails?.scan()
         }
     }
     
@@ -154,7 +162,7 @@ struct EmergencyCallDetailsView: View {
     
     var body: some View {
         VStack {
-            if let missingText = mission.missingText {
+            if let missingText = mission.missingText, selectorMode == .complex {
                 Text(missingText)
                     .multilineTextAlignment(.leading)
                     .padding(.vertical, 2)
@@ -162,36 +170,79 @@ struct EmergencyCallDetailsView: View {
             }
             
             #if os(iOS)
-            assetsListView
-                .environment(\.editMode, .constant(.active))
-                .padding(.bottom, 2)
+        
+            Picker("Ls", selection: $selectorMode) {
+                Text("Simple").tag(AssetSelectorMode.simple)
+                Text("Complex").tag(AssetSelectorMode.complex)
+            }
+            .pickerStyle(.segmented)
+            .padding(.horizontal)
+            
+            if selectorMode == .simple {
+                assetTypeListView
+                    //.environment(\.editMode, .constant(.active))
+                    //.listStyle(.plain)
+                    //.padding(.top)
+            } else {
+                assetsListView
+                    .environment(\.editMode, .constant(.active))
+                    .padding(.bottom, 2)
+            }
             
             Spacer()
             
-            if patientMarkers.count > 0 {
-                patientsView
-                    .padding(.horizontal)
-            } else if combinedPatientMarkers.count > 0 {
-                combinedPatientsView
-                    .padding(.horizontal)
+            if !isSearch {
+                if patientMarkers.count > 0 {
+                    patientsView
+                        .padding(.horizontal)
+                } else if combinedPatientMarkers.count > 0 {
+                    combinedPatientsView
+                        .padding(.horizontal)
+                }
             }
             #endif
             
             // TODO: better cross-platform structuring
             // TODO: put on sheet for iOS
             #if os(macOS)
-            HStack(spacing: 5) {
-                missionDetailsView
-                .frame(minWidth: 400, maxWidth: 800)
-                
-                VStack {
-                    assetsTableView
-                }
-                .layoutPriority(2)
-                
+            Picker("Select Modus", selection: $selectorMode) {
+                Text("Simple").tag(AssetSelectorMode.simple)
+                Text("Complex").tag(AssetSelectorMode.complex)
             }
-            .onAppear {
-                updateStaticDetails()
+            .pickerStyle(.segmented)
+            .padding()
+            
+            if selectorMode == .simple {
+                HStack(spacing: 5) {
+                    missionDetailsView
+                    .frame(minWidth: 400, maxWidth: 800)
+                    
+                    VStack {
+                        assetTypeListView
+                            //.environment(\.editMode, .constant(.active))
+                            //.listStyle(.plain)
+                            //.padding(.top)
+                    }
+                    .layoutPriority(2)
+                    
+                }
+                .onAppear {
+                    updateStaticDetails()
+                }
+            } else {
+                HStack(spacing: 5) {
+                    missionDetailsView
+                    .frame(minWidth: 400, maxWidth: 800)
+                    
+                    VStack {
+                        assetsTableView
+                    }
+                    .layoutPriority(2)
+                    
+                }
+                .onAppear {
+                    updateStaticDetails()
+                }
             }
             #endif
         }
@@ -200,7 +251,7 @@ struct EmergencyCallDetailsView: View {
         .toolbar {
             toolbarButtons
         }
-        .searchable(text: $searchText)
+        .searchable(text: $searchText, isPresented: $isSearch)
         .onChange(of: vehicleCategoryFilter, initial: false) {
             selection.removeAll()
             vehicleTypeFilter = .all
@@ -524,6 +575,54 @@ struct EmergencyCallDetailsView: View {
     var assetsListView: some View {
         List(vehicles, id: \.id, selection: $selection) { vContainer in
             VehicleRowView(vContainer: vContainer, imageURL: URL(string: vehicleImageUrlStrings[vContainer.vehicle.vehicleType < vehicleImageUrlStrings.count ? Int(vContainer.vehicle.vehicleType) : 0]?[0] ?? model.relativeLssURLString(path: vContainer.vehicle.imageUrlStatic))!)
+        }
+    }
+    
+    private func alarmVehicleType(_ vt: VehicleType) {
+        let avail = vehicles.filter { $0.vehicle.vehicleType == vt.rawValue && $0.vehicle.fmsShow == 2 && $0.distanceInKm < 100 }.sorted {
+            $0.distanceInKm > $1.distanceInKm
+        }
+        let howMany = missionUnitsRequirement?.howMany(of: vt) ?? 0
+        
+        if avail.count > 0 {
+            Task {
+                let result = await self.model.missionAlarm(missionId: mission.id, vehicleIds: Set(avail.prefix(Int(howMany)).map { $0.vehicle.id }))
+                print("[EmergencyCallDetailsView] Alarmed with status: \(result)")
+                if result {
+                    updateStaticDetails()
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    var assetTypeListView: some View {
+        List {
+            Section {
+                ForEach(VehicleType.allCases.filter { $0 != .all && (searchText.isEmpty || $0.asGermanString().contains(searchText) || $0.asGermanStringShort().contains(searchText)) && (missionUnitsRequirement != nil ? missionUnitsRequirement!.howMany(of: $0) > 0 : false) }, id: \.id) { vt in
+                    Button {
+                        alarmVehicleType(vt)
+                    } label: {
+                        VehicleTypeRow(model: model, vehicleType: vt)
+                            .clipShape(RoundedRectangle(cornerRadius: 4))
+                    }
+                }
+            } header: {
+                Text("Required")
+            }
+            
+            Section {
+                ForEach(VehicleType.allCases.filter { $0 != .all && (searchText.isEmpty || $0.asGermanString().contains(searchText) || $0.asGermanStringShort().contains(searchText)) && (missionUnitsRequirement != nil ? missionUnitsRequirement!.howMany(of: $0) == 0 : true) }, id: \.id) { vt in
+                    Button {
+                        alarmVehicleType(vt)
+                    } label: {
+                        VehicleTypeRow(model: model, vehicleType: vt)
+                            .clipShape(RoundedRectangle(cornerRadius: 4))
+                    }
+                }
+            } header: {
+                Text("Additional")
+            }
         }
     }
     

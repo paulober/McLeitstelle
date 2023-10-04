@@ -48,7 +48,7 @@ public func scanMissionEinsatzHTML(csrfToken: String, missionTypeId: UInt16, mis
                         let key = try columns[0].text()
                         let value = try columns[1].text()
                         // Assuming the values are UInt8
-                        if let intValue = UInt8(value) {
+                        if let intValue = UInt16(value) {
                             details.requiredAssets[key] = intValue
                         }
                     }

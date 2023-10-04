@@ -61,8 +61,8 @@ public func scanMissionHTML(csrfToken: String, missionId: String) async -> LiveM
                             }
                         }*/
                         
-                        // TODO: support RTHs
-                        if let typeId = liveDetails.vehicleTypeIds[vehicleId], typeId == 28 {
+                        // TODO: suport RTH
+                        if let typeId = liveDetails.vehicleTypeIds[vehicleId], typeId == VehicleType.rtw.rawValue || typeId == VehicleType.naw.rawValue {
                             if let patientTd = try? tr.select("td:contains(Patient)").first,
                                let patientName = try? patientTd.text() {
                                 

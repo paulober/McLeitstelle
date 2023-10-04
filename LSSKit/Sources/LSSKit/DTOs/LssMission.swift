@@ -535,6 +535,16 @@ public struct LssRequirements: Codable, Hashable {
             
         case .all:
             return true
+            
+        case .lkwK9:
+            if let thwLkw = self.thwLkw {
+                return thwLkw > 0
+            }
+            
+        case .brmgr:
+            if let thwBrmgR = self.thwBrmgR {
+                return thwBrmgR > 0
+            }
         }
         
         return false

@@ -16,8 +16,11 @@
 		B11B4CD02AAB99A7000C9422 /* EmergencyCallRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11B4CCF2AAB99A7000C9422 /* EmergencyCallRow.swift */; };
 		B11B9F382AA72A9900C18313 /* VehiclesTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11B9F372AA72A9900C18313 /* VehiclesTable.swift */; };
 		B11B9F3A2AA72CE500C18313 /* VehicleDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B11B9F392AA72CE500C18313 /* VehicleDetailsView.swift */; };
+		B1424A752ACDE93000CBDCF3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1424A742ACDE93000CBDCF3 /* main.swift */; };
+		B1424A7A2ACDE9E000CBDCF3 /* LssKit in Frameworks */ = {isa = PBXBuildFile; productRef = B1424A792ACDE9E000CBDCF3 /* LssKit */; };
 		B142A56E2AA38BC0001B4D9A /* EmergencyCallsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B142A56D2AA38BC0001B4D9A /* EmergencyCallsTable.swift */; };
 		B142A5742AA3E473001B4D9A /* EmergencyCallDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B142A5732AA3E473001B4D9A /* EmergencyCallDetailsView.swift */; };
+		B1558DC72AC5D0A800BA7E96 /* VehicleTypeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1558DC62AC5D0A800BA7E96 /* VehicleTypeRow.swift */; };
 		B18FD8FE2AA36FB90094FFBC /* LssKit in Frameworks */ = {isa = PBXBuildFile; productRef = B18FD8FD2AA36FB90094FFBC /* LssKit */; };
 		B19ADC142AA0F6E20013B88C /* McLeitstelleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ADC132AA0F6E20013B88C /* McLeitstelleApp.swift */; };
 		B19ADC162AA0F6E20013B88C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ADC152AA0F6E20013B88C /* ContentView.swift */; };
@@ -40,6 +43,18 @@
 		B1BED2292AA528010029DE3E /* OwnerFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BED2282AA528010029DE3E /* OwnerFilter.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		B1424A702ACDE93000CBDCF3 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		B1013E942AA4152F00AFA870 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		B10F2FA12AA5D980000B1741 /* AllianceChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllianceChatView.swift; sourceTree = "<group>"; };
@@ -50,8 +65,11 @@
 		B11B4CCF2AAB99A7000C9422 /* EmergencyCallRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallRow.swift; sourceTree = "<group>"; };
 		B11B9F372AA72A9900C18313 /* VehiclesTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehiclesTable.swift; sourceTree = "<group>"; };
 		B11B9F392AA72CE500C18313 /* VehicleDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleDetailsView.swift; sourceTree = "<group>"; };
+		B1424A722ACDE93000CBDCF3 /* McLeitstelleCli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = McLeitstelleCli; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1424A742ACDE93000CBDCF3 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		B142A56D2AA38BC0001B4D9A /* EmergencyCallsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallsTable.swift; sourceTree = "<group>"; };
 		B142A5732AA3E473001B4D9A /* EmergencyCallDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallDetailsView.swift; sourceTree = "<group>"; };
+		B1558DC62AC5D0A800BA7E96 /* VehicleTypeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTypeRow.swift; sourceTree = "<group>"; };
 		B19ADC102AA0F6E20013B88C /* McLeitstelle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = McLeitstelle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ADC132AA0F6E20013B88C /* McLeitstelleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McLeitstelleApp.swift; sourceTree = "<group>"; };
 		B19ADC152AA0F6E20013B88C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -77,6 +95,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B1424A6F2ACDE93000CBDCF3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1424A7A2ACDE9E000CBDCF3 /* LssKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B19ADC0D2AA0F6E20013B88C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -107,6 +133,14 @@
 			path = Chat;
 			sourceTree = "<group>";
 		};
+		B1424A732ACDE93000CBDCF3 /* McLeitstelleCli */ = {
+			isa = PBXGroup;
+			children = (
+				B1424A742ACDE93000CBDCF3 /* main.swift */,
+			);
+			path = McLeitstelleCli;
+			sourceTree = "<group>";
+		};
 		B18FD8FC2AA36FB90094FFBC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -119,6 +153,7 @@
 			children = (
 				B19ADC122AA0F6E20013B88C /* McLeitstelle */,
 				B19ADC242AA0F7750013B88C /* LSSKit */,
+				B1424A732ACDE93000CBDCF3 /* McLeitstelleCli */,
 				B19ADC112AA0F6E20013B88C /* Products */,
 				B18FD8FC2AA36FB90094FFBC /* Frameworks */,
 			);
@@ -128,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				B19ADC102AA0F6E20013B88C /* McLeitstelle.app */,
+				B1424A722ACDE93000CBDCF3 /* McLeitstelleCli */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -188,6 +224,7 @@
 				B142A56D2AA38BC0001B4D9A /* EmergencyCallsTable.swift */,
 				B142A5732AA3E473001B4D9A /* EmergencyCallDetailsView.swift */,
 				B11B4CCF2AAB99A7000C9422 /* EmergencyCallRow.swift */,
+				B1558DC62AC5D0A800BA7E96 /* VehicleTypeRow.swift */,
 			);
 			path = EmergencyCalls;
 			sourceTree = "<group>";
@@ -250,6 +287,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B1424A712ACDE93000CBDCF3 /* McLeitstelleCli */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B1424A762ACDE93000CBDCF3 /* Build configuration list for PBXNativeTarget "McLeitstelleCli" */;
+			buildPhases = (
+				B1424A6E2ACDE93000CBDCF3 /* Sources */,
+				B1424A6F2ACDE93000CBDCF3 /* Frameworks */,
+				B1424A702ACDE93000CBDCF3 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = McLeitstelleCli;
+			packageProductDependencies = (
+				B1424A792ACDE9E000CBDCF3 /* LssKit */,
+			);
+			productName = McLeitstelleCli;
+			productReference = B1424A722ACDE93000CBDCF3 /* McLeitstelleCli */;
+			productType = "com.apple.product-type.tool";
+		};
 		B19ADC0F2AA0F6E20013B88C /* McLeitstelle */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B19ADC212AA0F6E30013B88C /* Build configuration list for PBXNativeTarget "McLeitstelle" */;
@@ -280,6 +337,9 @@
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
+					B1424A712ACDE93000CBDCF3 = {
+						CreatedOnToolsVersion = 15.0;
+					};
 					B19ADC0F2AA0F6E20013B88C = {
 						CreatedOnToolsVersion = 15.0;
 					};
@@ -299,6 +359,7 @@
 			projectRoot = "";
 			targets = (
 				B19ADC0F2AA0F6E20013B88C /* McLeitstelle */,
+				B1424A712ACDE93000CBDCF3 /* McLeitstelleCli */,
 			);
 		};
 /* End PBXProject section */
@@ -316,6 +377,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B1424A6E2ACDE93000CBDCF3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1424A752ACDE93000CBDCF3 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B19ADC0C2AA0F6E20013B88C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -327,6 +396,7 @@
 				B1BED2222AA4A58B0029DE3E /* LoginView.swift in Sources */,
 				B142A56E2AA38BC0001B4D9A /* EmergencyCallsTable.swift in Sources */,
 				B19ADC162AA0F6E20013B88C /* ContentView.swift in Sources */,
+				B1558DC72AC5D0A800BA7E96 /* VehicleTypeRow.swift in Sources */,
 				B19ADC182AA0F6E20013B88C /* Item.swift in Sources */,
 				B1A3E06E2AA11C00006CD44D /* BuildingsView.swift in Sources */,
 				B11B4CCE2AAB86A5000C9422 /* VehicleRowView.swift in Sources */,
@@ -354,6 +424,34 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
+		B1424A772ACDE93000CBDCF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T6Y826PCAK;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.paulober.McLeitstelleCli;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		B1424A782ACDE93000CBDCF3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = T6Y826PCAK;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.paulober.McLeitstelleCli;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		B19ADC1F2AA0F6E30013B88C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -555,6 +653,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B1424A762ACDE93000CBDCF3 /* Build configuration list for PBXNativeTarget "McLeitstelleCli" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1424A772ACDE93000CBDCF3 /* Debug */,
+				B1424A782ACDE93000CBDCF3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B19ADC0B2AA0F6E20013B88C /* Build configuration list for PBXProject "McLeitstelle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -576,6 +683,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		B1424A792ACDE9E000CBDCF3 /* LssKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LssKit;
+		};
 		B18FD8FD2AA36FB90094FFBC /* LssKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LssKit;

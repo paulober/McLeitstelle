@@ -5,6 +5,7 @@
 //  Created by Paul on 29.08.23.
 //
 
+import Foundation
 import Combine
 import Darwin
 
@@ -56,22 +57,30 @@ public class LssAPI {
     public func connect(creds: FayeCredentials) async throws -> LssDTOCollection {
         var initialData: LssDTOCollection = LssDTOCollection(creds: creds)
         
+        var startTime = DispatchTime.now()
         // set initial cookies for index request
         constructCookies(for: lssBaseURL, creds: initialData.creds)
         
         // needed for ext values for faye
         guard let indexHTML = await downloadIndexHTML(from: lssBaseURL, creds: &initialData.creds) else { throw LssAPIError.downloadIndexHTMLFailed }
+        var endTime = DispatchTime.now()
+        print("Downloaded index.html in \(Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000.0)ms")
+        // reducing into html contianing only the scripts doesn't save time in scaning but takes about 5 seconds
+        /*startTime = DispatchTime.now()
         let scriptsHTML = htmlReduceToScripts(from: indexHTML)
+        endTime = DispatchTime.now()
+        print("Reduced scriptsHTML in \(Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000.0)ms")*/
         
-        async let userDetailsTask = htmlExtractUserDetails(from: scriptsHTML, indexHTML: indexHTML)
+        startTime = DispatchTime.now()
+        async let userDetailsTask = htmlExtractUserDetails(from: indexHTML, indexHTML: indexHTML)
         
-        async let radioMessagesTask = htmlExtractRadioMessages(from: scriptsHTML)
-        async let chatMessagesTask = htmlExtractAllianceChats(from: scriptsHTML)
-        async let missionMarkersTask = htmlExtractMissionMarkers(from: scriptsHTML)
-        async let patientMarkersTask = htmlExtractPatientMarkers(from: scriptsHTML)
-        async let combinedPatientMarkersTask = htmlExtractCombinedPatientMarkers(from: scriptsHTML)
-        async let buildingMarkersTask = htmlExtractBuildingMarkers(from: scriptsHTML)
-        async let vehicleDrivesTask = htmlExtractVehicleDrives(from: scriptsHTML)
+        async let radioMessagesTask = htmlExtractRadioMessages(from: indexHTML)
+        async let chatMessagesTask = htmlExtractAllianceChats(from: indexHTML)
+        async let missionMarkersTask = htmlExtractMissionMarkers(from: indexHTML)
+        async let patientMarkersTask = htmlExtractPatientMarkers(from: indexHTML)
+        async let combinedPatientMarkersTask = htmlExtractCombinedPatientMarkers(from: indexHTML)
+        async let buildingMarkersTask = htmlExtractBuildingMarkers(from: indexHTML)
+        async let vehicleDrivesTask = htmlExtractVehicleDrives(from: indexHTML)
         
         var userDetails: [UserDetailsResult]
         (userDetails, initialData.radioMessages, initialData.chatMessages, initialData.missionMarkers, initialData.patientMarkers, initialData.combinedPatientMarkers, initialData.buildingMarkers, initialData.vehicleDrives) = await (userDetailsTask, radioMessagesTask, chatMessagesTask, missionMarkersTask, patientMarkersTask, combinedPatientMarkersTask, buildingMarkersTask, vehicleDrivesTask)
@@ -97,6 +106,9 @@ public class LssAPI {
                 initialData.creds.mapView = (lat, long)
             }
         }
+        endTime = DispatchTime.now()
+        print("Extracted details in \(Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000.0)ms")
+        startTime = DispatchTime.now()
         
         self.credentials = initialData.creds
         // reconstruct cookies with updated creds
@@ -106,6 +118,8 @@ public class LssAPI {
         
         client.resume()
         startReceivingMessages()
+        endTime = DispatchTime.now()
+        print("Resumed client in \(Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000.0)ms")
         
         return initialData
     }

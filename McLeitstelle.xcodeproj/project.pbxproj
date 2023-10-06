@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B1013E952AA4152F00AFA870 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1013E942AA4152F00AFA870 /* Coordinate.swift */; };
 		B10F2FA22AA5D980000B1741 /* AllianceChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F2FA12AA5D980000B1741 /* AllianceChatView.swift */; };
 		B10F2FA42AA5DC3E000B1741 /* ChatMessageRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F2FA32AA5DC3E000B1741 /* ChatMessageRow.swift */; };
 		B10F2FA92AA5ECFA000B1741 /* BuildingDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10F2FA82AA5ECFA000B1741 /* BuildingDetailsView.swift */; };
@@ -57,7 +56,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B1013E942AA4152F00AFA870 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		B10F2FA12AA5D980000B1741 /* AllianceChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllianceChatView.swift; sourceTree = "<group>"; };
 		B10F2FA32AA5DC3E000B1741 /* ChatMessageRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageRow.swift; sourceTree = "<group>"; };
 		B10F2FA82AA5ECFA000B1741 /* BuildingDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingDetailsView.swift; sourceTree = "<group>"; };
@@ -119,7 +117,6 @@
 		B1013E932AA4150C00AFA870 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				B1013E942AA4152F00AFA870 /* Coordinate.swift */,
 				B1BED2282AA528010029DE3E /* OwnerFilter.swift */,
 				B19B20632AA8DA990045B84E /* MarkerFilter.swift */,
 			);
@@ -420,7 +417,6 @@
 				B10F2FA42AA5DC3E000B1741 /* ChatMessageRow.swift in Sources */,
 				B1A3E0782AA11C72006CD44D /* FinancesView.swift in Sources */,
 				B11B4CD02AAB99A7000C9422 /* EmergencyCallRow.swift in Sources */,
-				B1013E952AA4152F00AFA870 /* Coordinate.swift in Sources */,
 				B1BED2292AA528010029DE3E /* OwnerFilter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

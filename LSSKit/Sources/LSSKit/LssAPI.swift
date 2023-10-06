@@ -57,21 +57,25 @@ public class LssAPI {
     public func connect(creds: FayeCredentials) async throws -> LssDTOCollection {
         var initialData: LssDTOCollection = LssDTOCollection(creds: creds)
         
+        #if DEBUG
         var startTime = DispatchTime.now()
+        #endif
         // set initial cookies for index request
         constructCookies(for: lssBaseURL, creds: initialData.creds)
         
         // needed for ext values for faye
         guard let indexHTML = await downloadIndexHTML(from: lssBaseURL, creds: &initialData.creds) else { throw LssAPIError.downloadIndexHTMLFailed }
+        #if DEBUG
         var endTime = DispatchTime.now()
         print("Downloaded index.html in \(Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000.0)ms")
+        startTime = DispatchTime.now()
+        #endif
         // reducing into html contianing only the scripts doesn't save time in scaning but takes about 5 seconds
         /*startTime = DispatchTime.now()
         let scriptsHTML = htmlReduceToScripts(from: indexHTML)
         endTime = DispatchTime.now()
         print("Reduced scriptsHTML in \(Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000.0)ms")*/
-        
-        startTime = DispatchTime.now()
+    
         async let userDetailsTask = htmlExtractUserDetails(from: indexHTML, indexHTML: indexHTML)
         
         async let radioMessagesTask = htmlExtractRadioMessages(from: indexHTML)
@@ -106,9 +110,11 @@ public class LssAPI {
                 initialData.creds.mapView = (lat, long)
             }
         }
+        #if DEBUG
         endTime = DispatchTime.now()
         print("Extracted details in \(Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000.0)ms")
         startTime = DispatchTime.now()
+        #endif
         
         self.credentials = initialData.creds
         // reconstruct cookies with updated creds
@@ -118,8 +124,11 @@ public class LssAPI {
         
         client.resume()
         startReceivingMessages()
+        
+        #if DEBUG
         endTime = DispatchTime.now()
         print("Resumed client in \(Double(endTime.uptimeNanoseconds - startTime.uptimeNanoseconds) / 1_000_000.0)ms")
+        #endif
         
         return initialData
     }

@@ -44,7 +44,7 @@ struct EmergencyCallDetailsView: View {
     @State private var sortOrder = [KeyPathComparator(\VehicleContainer.distanceInKm, order: .forward)]
     @State private var selection: Set<VehicleContainer.ID> = []
     @State private var typeSelection: Set<VehicleType.ID> = []
-    @State private var selectorMode: AssetSelectorMode = .simple
+    @State private var selectorMode: AssetSelectorMode = .complex
     @State private var searchText: String = ""
     @State private var vehicleTypeFilter: VehicleType = .all
     @State private var vehicleCategoryFilter: VehicleCategory = .all
@@ -55,7 +55,7 @@ struct EmergencyCallDetailsView: View {
     @State private var isSearch: Bool = false
     
     @State private var showRtwTransportDialog: Bool = false
-    @State private var showMassPatientManagementSheet: Bool = false
+    @State private var showPatientsManagementSheet: Bool = false
     
     @State private var showPrisonerTransportDialog: Bool = false
     @State private var showPrisonerManagementSheet: Bool = false
@@ -73,7 +73,7 @@ struct EmergencyCallDetailsView: View {
             && v.matches(searchText: searchText)
         }
         .compactMap {
-            if $0.fmsReal == 2 && vehicleCategoryFilter != .onMission {
+            if $0.fmsReal == FMSStatus.einsatzbereitWache.rawValue && vehicleCategoryFilter != .onMission {
                 let bId = $0.buildingId
                 if let building = model.buildingMarkers.first(where: { $0.id == bId } ) {
                     return VehicleContainer(
@@ -84,7 +84,7 @@ struct EmergencyCallDetailsView: View {
                     )
                 }
             } // TODO: das bedeutet weiter allarmieren (todo anzeigen das weiteralarmieren)
-            else if $0.fmsReal == 4 && vehicleCategoryFilter == .onMission,
+            else if $0.fmsReal == FMSStatus.ankunftAnEinsatz.rawValue && vehicleCategoryFilter == .onMission,
                       let mId = $0.targetId {
                 
                 if let mission = model.missionMarkers.first(where: { $0.id == mId } ) {
@@ -142,14 +142,15 @@ struct EmergencyCallDetailsView: View {
         model.patientMarkers.filter { $0.missionId == mission.id }
     }
     
-    // TODO: should only be 0 or 1 length
     var combinedPatientMarkers: [CombinedPatientMarker] {
-        model.combinedPatientMarkers.filter { $0.missionId == mission.id }
+        let markers = model.combinedPatientMarkers.filter { $0.missionId == mission.id }
+        assert(markers.count == 0 || markers.count == 1)
+        return markers
     }
     
     private func updateStaticDetails() {
-        let startTime = Date()
         Task {
+            let startTime = Date()
             await getEinsatzDetails()
             await getVehiclesInMotion()
             
@@ -171,9 +172,9 @@ struct EmergencyCallDetailsView: View {
             
             #if os(iOS)
         
-            Picker("Ls", selection: $selectorMode) {
-                Text("Simple").tag(AssetSelectorMode.simple)
+            Picker("Select Modus", selection: $selectorMode) {
                 Text("Complex").tag(AssetSelectorMode.complex)
+                Text("Simple").tag(AssetSelectorMode.simple)
             }
             .pickerStyle(.segmented)
             .padding(.horizontal)
@@ -184,6 +185,20 @@ struct EmergencyCallDetailsView: View {
                     //.listStyle(.plain)
                     //.padding(.top)
             } else {
+                Button {
+                    if let unitReq = missionUnitsRequirement {
+                        Task {
+                            if await model.autoAlarm(mid: mission.id, caption: mission.caption, unitRequirements: unitReq) {
+                                updateStaticDetails()
+                            }
+                        }
+                    }
+                } label: {
+                    Label("Automatic Alarm", systemImage: "megaphone")
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 2)
+                
                 assetsListView
                     .environment(\.editMode, .constant(.active))
                     .padding(.bottom, 2)
@@ -192,10 +207,22 @@ struct EmergencyCallDetailsView: View {
             Spacer()
             
             if !isSearch {
+                /*
                 if patientMarkers.count > 0 {
                     patientsView
                         .padding(.horizontal)
-                } else if combinedPatientMarkers.count > 0 {
+                } else
+                 */
+                let patientsMissingTexts = patientMarkers.compactMap { $0.missingText }
+                if patientsMissingTexts.count > 0 {
+                    HStack {
+                        ForEach(patientMarkers, id: \.hashValue) { marker in
+                            Text(patientsMissingTexts.joined(separator: " || "))
+                        }
+                    }
+                }
+                    
+                if combinedPatientMarkers.count > 0 {
                     combinedPatientsView
                         .padding(.horizontal)
                 }
@@ -206,8 +233,8 @@ struct EmergencyCallDetailsView: View {
             // TODO: put on sheet for iOS
             #if os(macOS)
             Picker("Select Modus", selection: $selectorMode) {
-                Text("Simple").tag(AssetSelectorMode.simple)
                 Text("Complex").tag(AssetSelectorMode.complex)
+                Text("Simple").tag(AssetSelectorMode.simple)
             }
             .pickerStyle(.segmented)
             .padding()
@@ -235,6 +262,20 @@ struct EmergencyCallDetailsView: View {
                     .frame(minWidth: 400, maxWidth: 800)
                     
                     VStack {
+                        Button {
+                            if let unitReq = missionUnitsRequirement {
+                                Task {
+                                    if await model.autoAlarm(mid: mission.id, caption: mission.caption, unitRequirements: unitReq) {
+                                        updateStaticDetails()
+                                    }
+                                }
+                            }
+                        } label: {
+                            Label("Automatic Alarm", systemImage: "megaphone")
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, 4)
+                        
                         assetsTableView
                     }
                     .layoutPriority(2)
@@ -275,7 +316,7 @@ struct EmergencyCallDetailsView: View {
         .sheet(isPresented: $showMissionDetailsSheet) {
             missionDetailsView
         }
-        .sheet(isPresented: $showMassPatientManagementSheet) {
+        .sheet(isPresented: $showPatientsManagementSheet) {
             massPatientManagementView
         }
         .sheet(isPresented: $showPrisonerManagementSheet) {
@@ -315,6 +356,7 @@ struct EmergencyCallDetailsView: View {
                     if liveMissionDetails.vehiclesDrivingIds.count > 0 {
                         Section {
                             ForEach(liveMissionDetails.vehiclesDrivingIds, id: \.self) { vehicleId in
+                                // TODO: show if vehicle is currently at differenet mission and then doing this mission
                                 Text("\(liveMissionDetails.vehicleNames[vehicleId] ?? "N/A") by \(liveMissionDetails.vehicleOwners[vehicleId] ?? "N/A")")
                             }
                         } header: {
@@ -827,7 +869,7 @@ struct EmergencyCallDetailsView: View {
             HStack {
                 Spacer()
                 Button {
-                    showMassPatientManagementSheet = false
+                    showPatientsManagementSheet = false
                 } label: {
                     Label("Close", systemImage: "xmark")
                 }
@@ -854,7 +896,7 @@ struct EmergencyCallDetailsView: View {
                         
                         DispatchQueue.main.async {
                             rtwTransportDetails = transportDetails
-                            showMassPatientManagementSheet = false
+                            showPatientsManagementSheet = false
                             showRtwTransportDialog = true
                         }
                     }
@@ -876,6 +918,8 @@ struct EmergencyCallDetailsView: View {
             Task {
                 if selection.count > 0 {
                     let result = await model.missionAlarm(missionId: mission.id, vehicleIds: selection)
+                    // clear selection
+                    selection = []
                     print("[EmergencyCallDetailsView] Alarmed with status: \(result)")
                     if result {
                         // does forexample not work with anhanger like NEA50
@@ -895,11 +939,11 @@ struct EmergencyCallDetailsView: View {
         }
         
         Button {
-            showMassPatientManagementSheet = true
+            showPatientsManagementSheet = true
         } label: {
             Label("Patients Radio", systemImage: "phone.arrow.up.right")
         }
-        .disabled(combinedPatientMarkers.isEmpty)
+        .disabled(combinedPatientMarkers.isEmpty && patientMarkers.isEmpty)
         
         Button {
             showPrisonerManagementSheet = true

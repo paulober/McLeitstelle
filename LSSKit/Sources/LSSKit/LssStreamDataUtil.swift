@@ -22,6 +22,13 @@ internal func scanFayeData(data: String) -> FayeData {
         
         if let jsonData = jsonString.data(using: .utf8) {
             do {
+                // TODO: this json
+                /*
+                 [LssKit, LssStreamDataUtil] Unknown methodName: missionInvolved in json: 3055738615, true
+                 [LssKit, LssStreamDataUtil] Unknown methodName: vehicleMarkerAdd in json: {"bulkInsert":false,"id":55154091,"b":14845351,"fms":3,"fms_real":3,"c":"KTW (LL S\u00fcd)","t":38}
+                 [LssKit, LssStreamDataUtil] Unknown methodName: mission_participation_add in json: 3055738615
+                 [LssKit, LssStreamDataUtil] Unknown methodName: allianceCandidatureCount in json: 5
+                 */
                 // TODO: use equal instead of contains
                 // jsonString.contains("missionMarkerAdd")
                 // TODO: missionSpeed(...) method support is returned as response to rest mission speed change
@@ -37,6 +44,9 @@ internal func scanFayeData(data: String) -> FayeData {
                 } else if methodName.contains("vehicleDrive") {
                     let vehicleDrive = try decoder.decode(VehicleDrive.self, from: jsonData)
                     fayeData.newVehicleDrives.append(vehicleDrive)
+                } else if methodName.contains("vehicleMarkerAdd") {
+                    let vehicleMarker = try decoder.decode(VehicleMarker.self, from: jsonData)
+                    fayeData.newVehicleMarker.append(vehicleMarker)
                 } else if methodName.contains("prisonerMarkerAdd") {
                     let prisonerMarker = try decoder.decode(PrisonerMarker.self, from: jsonData)
                     fayeData.newPrisonerMarkers.append(prisonerMarker)
@@ -46,6 +56,12 @@ internal func scanFayeData(data: String) -> FayeData {
                 } else if methodName.contains("allianceChat") {
                     let chatMessage = try decoder.decode(ChatMessage.self, from: jsonData)
                     fayeData.newChatMessages.append(chatMessage)
+                } else if methodName.contains("mission_participation_add") {
+                    if let missionId = Int(jsonString) {
+                        fayeData.missionParticipationAdd.append(missionId)
+                    } else {
+                        print("[LssKit, LssStreamDataUtil] Unable to parse mission-ID from mission_participation_add.")
+                    }
                     
                 // delete functions
                 } else if methodName.contains("missionDelete") {

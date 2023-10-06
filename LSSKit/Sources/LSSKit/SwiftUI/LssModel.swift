@@ -273,6 +273,17 @@ public class LssModel: ObservableObject {
                         }
                     }
                 }
+                // for faster UI feedback after vehicle alarm
+                fayeData.newVehicleDrives.forEach { newVehicleDrive in
+                    withAnimation {
+                        if let idx = self.vehicles.firstIndex(where: { $0.id == newVehicleDrive.id }) {
+                            if let fmsReal = newVehicleDrive.fmsReal {
+                                self.vehicles[idx].fmsReal = fmsReal
+                            }
+                            self.vehicles[idx].fmsShow = newVehicleDrive.fms
+                        }
+                    }
+                }
                 fayeData.newPatientMarkers.forEach { newPatientMarker in
                     if let idx = self.patientMarkers.firstIndex(where: { $0.id == newPatientMarker.id }) {
                         self.patientMarkers.remove(at: idx)
@@ -318,6 +329,12 @@ public class LssModel: ObservableObject {
                     // only keep a maximum of 100 chat messages
                     if self.chatMessages.count > 100 {
                         self.chatMessages.removeSubrange(100..<self.chatMessages.count)
+                    }
+                }
+                
+                fayeData.missionParticipationAdd.forEach { missionId in
+                    if let idx = self.missionMarkers.firstIndex(where: { $0.id == missionId }) {
+                        self.missionMarkers[idx].icon.replace("_rot", with: "_gelb")
                     }
                 }
                 
@@ -468,7 +485,7 @@ public class LssModel: ObservableObject {
     public func missionAlarm(missionId: Int, vehicleIds: Set<Int>) async -> Bool {
         if await restMissionAlarm(csrfToken: creds.csrfToken ?? "N/A", missionId: missionId, vehicleIds: vehicleIds) {
             // start delay of vehicle
-            // TODO: only fetch vehicles from vehicleIds with vehiclesMap but may be bad because of GKW for NEA50
+            // TODO: only fetch vehicles from vehicleIds with vehiclesMap but may be bad because of GKW for NEA50 (vehicles with "Anhänger")
             DispatchQueue.main.asyncAfter(deadline: .now()+1) {
                 self.fetchVehicles()
             }
@@ -547,4 +564,125 @@ public class LssModel: ObservableObject {
 
 public extension LssModel {
     static let preview = LssModel(isPreview: true)
+}
+
+fileprivate extension Set {
+    mutating func insertRange(items: [Element]) {
+        items.forEach { self.insert($0) }
+    }
+}
+
+// automation
+public extension LssModel {
+    private func missionCoord(mid: Int) -> Coordinate? {
+        if let mission = self.missionMarkers.first(where: { $0.id == mid }) {
+            return Coordinate(latitude: mission.latitude, longitude: mission.longitude)
+        }
+        return nil
+    }
+    
+    private func vehicleCord(missionCoord: Coordinate, vehicle: LssVehicle) -> Double? {
+        if vehicle.fmsShow == FMSStatus.einsatzbereitWache.rawValue,
+           let building = self.buildingMarkers.first(where: { $0.id == vehicle.buildingId } ) {
+            return Coordinate(latitude: building.latitude, longitude: building.longitude).distance(to: missionCoord)
+        } else if vehicle.fmsShow == FMSStatus.ankunftAnEinsatz.rawValue && vehicle.queuedMissionId == nil,
+                  let targetId = vehicle.targetId,
+                  let currentMission = self.missionMarkers.first(where: {$0.id == targetId}){
+            return Coordinate(latitude: currentMission.latitude, longitude: currentMission.longitude).distance(to: missionCoord)
+        }
+        return nil
+    }
+    
+    func autoAlarm(mid: Int, caption: String, unitRequirements: MissionUinitsRequirement) async -> Bool {
+        var vids: Set<Int> = []
+        guard let missionCoord = self.missionCoord(mid: mid) else {
+            return false
+        }
+        let myVehicles: [(VehicleType, Int, Double)] = self.vehicles.compactMap {
+            if let vt = VehicleType(rawValue: $0.vehicleType),
+               // this makes sure only fms 2 or 4 is returned
+               let c = self.vehicleCord(missionCoord: missionCoord, vehicle: $0),
+               // max driving distance == 100km
+               c <= 100.0 {
+                // optional + 100km so only directly available vehicles are alarmed
+                return (vt, $0.id, c + ($0.fmsShow == FMSStatus.ankunftAnEinsatz.rawValue ? 100.0 : 0.0))
+            }
+            return nil
+        }
+        
+        if caption == "Krankentransport" {
+            if let ktwId = myVehicles.first(where: { $0.0 == .ktw })?.1 {
+                vids.insert(ktwId)
+                return await self.missionAlarm(missionId: mid, vehicleIds: vids)
+            }
+            return false
+        }
+        
+        // calculate required LFs
+        // TODO: also check required Feuerwehrleute
+        // TODO: support HLFs
+        let waterRequired = unitRequirements.rWater
+        var requiredLfsCount = Int(unitRequirements.rLF)
+        if let waterRequired = waterRequired {
+            var waterLeft = Int(waterRequired) - (requiredLfsCount * 2000)
+            // TODO: currently max 1 GTLF supported (pre mission)
+            if waterLeft > 10_000,
+               let gtlfId = myVehicles.first(where: { $0.0 == .gtlf })?.1  {
+                vids.insert(gtlfId)
+                // because a GTLF also counts as LF
+                if requiredLfsCount > 0 {
+                    requiredLfsCount -= 1
+                }
+                waterLeft -= 10_000
+            }
+            
+            // TODO: support TLF4000
+            if waterLeft > 0 {
+                // send one additional unit if not enoguht water but less than 2000 extra required
+                requiredLfsCount += waterLeft / 2000 + ((waterLeft % 2000) > 0 ? 1 : 0)
+            }
+        }
+        var selectedLfs = myVehicles.filter { $0.0 == VehicleType.lf20 }.sorted(by: { $0.2 < $1.2 }).prefix(requiredLfsCount).map { $0.1 }
+        if selectedLfs.count == 0 && requiredLfsCount > 0 {
+            selectedLfs = myVehicles.filter { $0.0 == VehicleType.hlf20 }.sorted(by: { $0.2 < $1.2 }).prefix(requiredLfsCount).map { $0.1 }
+        }
+        
+        vids.insertRange(items: selectedLfs)
+        
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.rw }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rRW)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.dlk }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rDLK)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.elw1 }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rELW1)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.elw2 }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rELW2)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwA }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWa)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.fuStW }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rPol)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.fwk }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rFWK)).map { $0.1 })
+        
+        // TODO: optimized for different posibilities, counts and transport options
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.rtw }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.possiblePatients)).map { $0.1 })
+        
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwMess }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWm)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gkw }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rTHW_GKW)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.mtwTz }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rTHW_MtwTz)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.mzGw }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rTHW_MzGwFGrN)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwOil }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWo)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwHoehe }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWh)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.dekonP }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rDekonP)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwL2Wasser }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rSchlauchwagen)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwGefahrgut}.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWg)).map { $0.1 })
+        
+        // TODO: do for all "Anhänger"
+        let brmgrs = myVehicles.filter { $0.0 == VehicleType.brmgr}.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rTHW_BRmGr)).map { $0.1 }
+        if brmgrs.count == 0 {
+            vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.lkwK9}.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rTHW_LKWk9)).map { $0.1 })
+        } else {
+            vids.insertRange(items: brmgrs)
+        }
+        
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.nef}.sorted(by: { $0.2 < $1.2 }).prefix(unitRequirements.nefPosibility != nil && unitRequirements.nefPosibility! > 90 ? Int(unitRequirements.nefPosibility!) : 0).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.dhuUFueKw}.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rDhufukw)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.nea50}.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rNEA50)).map { $0.1 })
+        
+        // vehicles are automatically updated by missionAlarm after alarming vehicles + delay
+        return await self.missionAlarm(missionId: mid, vehicleIds: vids)
+    }
 }

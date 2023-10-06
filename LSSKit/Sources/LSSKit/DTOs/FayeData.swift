@@ -11,9 +11,12 @@ public struct FayeData {
     public var newCombinedPatientMarkers: [CombinedPatientMarker] = []
     public var newMissionMarkers: [MissionMarker] = []
     public var newVehicleDrives: [VehicleDrive] = []
+    public var newVehicleMarker: [VehicleMarker] = []
     public var newPrisonerMarkers: [PrisonerMarker] = []
     public var newRadioMessages: [RadioMessage] = []
     public var newChatMessages: [ChatMessage] = []
+    
+    public var missionParticipationAdd: [Int] = []
     
     public var deletedMissions: [Int] = []
     public var deletedPatients: [Int] = []

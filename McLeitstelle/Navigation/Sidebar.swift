@@ -41,6 +41,7 @@ struct Sidebar: View {
             NavigationLink(value: Panel.dashboard) {
                 Label("Dashboard", systemImage: "magnifyingglass")
             }
+            .badge(model.radioMessages.filter { $0.userId == model.getUserID() && $0.fms == FMSStatus.sprechwunsch.rawValue }.count)
             
             NavigationLink(value: Panel.emergencyCalls) {
                 Label("Emergency Calls", systemImage: "phone.down.waves.left.and.right")

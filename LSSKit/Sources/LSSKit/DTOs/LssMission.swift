@@ -545,6 +545,22 @@ public struct LssRequirements: Codable, Hashable {
             if let thwBrmgR = self.thwBrmgR {
                 return thwBrmgR > 0
             }
+        case .anhHund:
+            return false
+        case .mtwO:
+            return false
+        case .flf:
+            return false
+        case .zivilstreifenwagen:
+            return (commercePolice ?? 0) > 0
+        case .tankwagen:
+            if let waterTankers = self.waterTankers {
+                return waterTankers > 0
+            }
+        case .anhDle:
+            if let thwDle = self.thwDle {
+                return thwDle > 0
+            }
         }
         
         return false

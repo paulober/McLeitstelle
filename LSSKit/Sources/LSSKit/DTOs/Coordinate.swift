@@ -7,12 +7,17 @@
 
 import Foundation
 
-struct Coordinate {
-    let latitude: Double
-    let longitude: Double
+public struct Coordinate {
+    public let latitude: Double
+    public let longitude: Double
+    
+    public init(latitude: Double, longitude: Double) {
+        self.latitude = latitude
+        self.longitude = longitude
+    }
 }
 
-extension Coordinate {
+public extension Coordinate {
     func distance(to destination: Coordinate) -> Double {
         let earthRadius: Double = 6371 // Earth's radius in kilometers
 

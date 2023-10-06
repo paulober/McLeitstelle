@@ -34,7 +34,6 @@ public struct MissionUinitsRequirement {
     public var minPoliceOfficers: UInt16 = 0
     public var possiblePrissoners: UInt16 = 0
     public var rPoliceHelicopters: UInt16 = 0
-    public var rPoliceMotorbikes: UInt16 = 0
     public var rDhufukw: UInt16 = 0
     public var rCivilVehicles: UInt16 = 0
     public var rRadioPolDienstgruppenleitung: UInt16 = 0
@@ -45,6 +44,7 @@ public struct MissionUinitsRequirement {
     public var rMek: UInt16 = 0
     public var rWasserwerfer: UInt16 = 0
     public var rGWt: UInt16 = 0
+    public var rGWtaucher: UInt16 = 0
     public var rBoats: UInt16 = 0
     public var possiblePatients: UInt16 = 0
     /// in percent
@@ -69,8 +69,18 @@ public struct MissionUinitsRequirement {
     public var rNEA200: UInt16 = 0
     public var rMzGwSB: UInt16 = 0
     public var rVents: UInt16 = 0
+    /// time in minutes minimum required to finish
+    public var totalTimeSpan: UInt16?
+    
+    public var ktwCanReplaceRTW: Bool?
+    public var ktwTypeBCanReplaceRTW: Bool?
     
     public var polMotorbikesCanReplaceCars: Bool?
+    /// Number of pol vehicles that can be replaced by pol motorbikes if nil and `polMotorbikesCanReplaceCars` is true => all
+    public var polReplaceableByBikesCount: UInt16?
+    public var polCivilCanReplaceCars: Bool?
+    /// Number of pol vehicles that can be replaced by pol civil vehicles if nil and `polCivilCanReplaceCars` is true => all
+    public var polReplaceableByCivilCount: UInt16?
     
     public func howMany(of type: VehicleType) -> UInt16 {
         switch type {
@@ -154,6 +164,18 @@ public struct MissionUinitsRequirement {
             return 0
         case .all:
             return 0
+        case .anhHund:
+            return 0
+        case .mtwO:
+            return 0
+        case .flf:
+            return rFlf
+        case .zivilstreifenwagen:
+            return rCivilVehicles
+        case .tankwagen:
+            return 0
+        case .anhDle:
+            return rTHW_AnhDle
         }
     }
 }

@@ -43,8 +43,8 @@ public struct LssVehicle: Codable, Identifiable, Hashable, Equatable {
     public let caption: String
     public let buildingId: Int
     public let vehicleType: UInt16
-    public var fmsReal: Int
-    public var fmsShow: Int
+    public var fmsReal: UInt8
+    public var fmsShow: UInt8
     // should be always != nil but for savety make it nullable
     public let vehicleTypeCaption: String?
     public let workingHourStart: UInt8

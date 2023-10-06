@@ -598,14 +598,14 @@ public extension LssModel {
         guard let missionCoord = self.missionCoord(mid: mid) else {
             return false
         }
-        let myVehicles: [(VehicleType, Int, Double)] = self.vehicles.compactMap {
+        let myVehicles: [(VehicleType, Int, Double, UInt8)] = self.vehicles.compactMap {
             if let vt = VehicleType(rawValue: $0.vehicleType),
                // this makes sure only fms 2 or 4 is returned
                let c = self.vehicleCord(missionCoord: missionCoord, vehicle: $0),
                // max driving distance == 100km
                c <= 100.0 {
                 // optional + 100km so only directly available vehicles are alarmed
-                return (vt, $0.id, c + ($0.fmsShow == FMSStatus.ankunftAnEinsatz.rawValue ? 100.0 : 0.0))
+                return (vt, $0.id, c + ($0.fmsShow == FMSStatus.ankunftAnEinsatz.rawValue ? 100.0 : 0.0), $0.fmsShow)
             }
             return nil
         }
@@ -642,9 +642,19 @@ public extension LssModel {
                 requiredLfsCount += waterLeft / 2000 + ((waterLeft % 2000) > 0 ? 1 : 0)
             }
         }
-        var selectedLfs = myVehicles.filter { $0.0 == VehicleType.lf20 }.sorted(by: { $0.2 < $1.2 }).prefix(requiredLfsCount).map { $0.1 }
+        var selectedLfs = myVehicles.filter { $0.0 == VehicleType.lf20 && $0.3 == FMSStatus.einsatzbereitWache.rawValue }.sorted(by: { $0.2 < $1.2 }).prefix(requiredLfsCount).map { $0.1 }
         if selectedLfs.count == 0 && requiredLfsCount > 0 {
-            selectedLfs = myVehicles.filter { $0.0 == VehicleType.hlf20 }.sorted(by: { $0.2 < $1.2 }).prefix(requiredLfsCount).map { $0.1 }
+            selectedLfs = myVehicles.filter { $0.0 == VehicleType.hlf20 && $0.3 == FMSStatus.einsatzbereitWache.rawValue }.sorted(by: { $0.2 < $1.2 }).prefix(requiredLfsCount).map { $0.1 }
+            
+            if selectedLfs.count == 0 {
+                // with "weiteralarmieren" allowed
+                selectedLfs = myVehicles.filter { $0.0 == VehicleType.lf20 }.sorted(by: { $0.2 < $1.2 }).prefix(requiredLfsCount).map { $0.1 }
+                
+                if selectedLfs.count == 0 {
+                    // with "weiteralarmieren" allowed
+                    selectedLfs = myVehicles.filter { $0.0 == VehicleType.hlf20 }.sorted(by: { $0.2 < $1.2 }).prefix(requiredLfsCount).map { $0.1 }
+                }
+            }
         }
         
         vids.insertRange(items: selectedLfs)

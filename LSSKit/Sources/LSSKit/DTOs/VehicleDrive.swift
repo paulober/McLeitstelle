@@ -15,8 +15,8 @@ public struct VehicleDrive: Codable, Identifiable, Hashable, Equatable {
     /// time since last stop at building or mission in s
     public let driveDuration: Int?
     public let steps: String?
-    public let fms: Int
-    public let fmsReal: Int?
+    public let fms: UInt8
+    public let fmsReal: UInt8?
     public let userId: Int
     /// image siren
     public let imageSonderrechte: String?

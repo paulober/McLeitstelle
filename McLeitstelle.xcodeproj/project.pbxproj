@@ -41,6 +41,7 @@
 		B1BED2222AA4A58B0029DE3E /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BED2212AA4A58B0029DE3E /* LoginView.swift */; };
 		B1BED2272AA51CCF0029DE3E /* BuildingsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BED2262AA51CCF0029DE3E /* BuildingsTable.swift */; };
 		B1BED2292AA528010029DE3E /* OwnerFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BED2282AA528010029DE3E /* OwnerFilter.swift */; };
+		B1CAFA362ACE17D100815AD9 /* Publisher+AsyncSink.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1CAFA352ACE17D100815AD9 /* Publisher+AsyncSink.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -92,6 +93,7 @@
 		B1BED2212AA4A58B0029DE3E /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B1BED2262AA51CCF0029DE3E /* BuildingsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildingsTable.swift; sourceTree = "<group>"; };
 		B1BED2282AA528010029DE3E /* OwnerFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwnerFilter.swift; sourceTree = "<group>"; };
+		B1CAFA352ACE17D100815AD9 /* Publisher+AsyncSink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Publisher+AsyncSink.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				B1424A742ACDE93000CBDCF3 /* main.swift */,
+				B1CAFA352ACE17D100815AD9 /* Publisher+AsyncSink.swift */,
 			);
 			path = McLeitstelleCli;
 			sourceTree = "<group>";
@@ -381,6 +384,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1CAFA362ACE17D100815AD9 /* Publisher+AsyncSink.swift in Sources */,
 				B1424A752ACDE93000CBDCF3 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

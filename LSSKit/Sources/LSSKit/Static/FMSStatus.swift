@@ -5,7 +5,7 @@
 //  Created by Paul on 09.09.23.
 //
 
-public enum FMSStatus: UInt8 {
+public enum FMSStatus: UInt8, CaseIterable {
     case einsatzbereitFunk = 1
     case einsatzbereitWache = 2
     case anfahrtZumEinsatz = 3

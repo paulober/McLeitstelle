@@ -938,6 +938,7 @@ struct EmergencyCallDetailsView: View {
             Label("Alarm", systemImage: "bell.and.waves.left.and.right")
         }
         
+        // TODO: switch these to if no patients but prisoners! on iOS
         Button {
             showPatientsManagementSheet = true
         } label: {

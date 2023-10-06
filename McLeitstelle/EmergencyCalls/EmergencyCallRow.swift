@@ -8,9 +8,18 @@
 import SwiftUI
 import LssKit
 
+private func secondsToHoursMinutes(_ seconds: Int) -> String {
+    let hours = seconds / 3600
+    let minutes = (seconds % 3600) / 60
+    
+    let formattedTime = String(format: "%dh %02dmin", hours, minutes)
+    
+    return formattedTime
+}
+
 struct EmergencyCallRow: View {
-    var missionMarker: MissionMarker
-    var imageURL: URL
+    @State var missionMarker: MissionMarker
+    @State var imageURL: URL
     
     var body: some View {
         HStack {
@@ -27,7 +36,11 @@ struct EmergencyCallRow: View {
                     iconShape.strokeBorder(.quaternary, lineWidth: 1.5)
                 }
             
+            #if os(iOS)
+            Text(missionMarker.caption + ((missionMarker.sicherheitsWache != nil && missionMarker.sicherheitsWache!) ? " in \(secondsToHoursMinutes(missionMarker.sicherheitsWacheStartIn ?? 0))" : ""))
+            #else
             Text(missionMarker.caption)
+            #endif
         }
         .padding(.vertical, 4)
     }

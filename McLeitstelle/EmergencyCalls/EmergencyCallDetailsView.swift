@@ -21,6 +21,9 @@ enum AssetSelectorMode {
     case simple, complex
 }
 
+// TODO: support by missionMarker prisoner_count to select a police vehicle by the user
+// sometimes there is no radioMessage for transport but a prisoner_count
+
 struct EmergencyCallDetailsView: View {
     @ObservedObject var model: LssModel
     @Binding var mission: MissionMarker

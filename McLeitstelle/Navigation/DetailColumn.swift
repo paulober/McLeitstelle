@@ -16,7 +16,11 @@ struct DetailColumn: View {
     var body: some View {
         switch selection {
         case .dashboard:
+            #if os(iOS)
             DashboardView(model: model, navigationSelection: $selection)
+            #else
+            MassiveDashboardView(model: model, navigationSelection: $selection)
+            #endif
         case .emergencyCalls:
             EmergencyCallsView(model: model)
         case .allianceChat:

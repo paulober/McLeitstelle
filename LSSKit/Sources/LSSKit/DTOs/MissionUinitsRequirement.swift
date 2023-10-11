@@ -176,6 +176,8 @@ public struct MissionUinitsRequirement {
             return 0
         case .anhDle:
             return rTHW_AnhDle
+        case .mlw:
+            return 0
         }
     }
 }

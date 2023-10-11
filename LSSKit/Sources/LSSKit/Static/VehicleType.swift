@@ -11,7 +11,7 @@ public enum VehicleCategory: UInt16, CaseIterable, Identifiable {
 }
 
 public enum VehicleType: UInt16, CaseIterable, Identifiable {
-    case lf20 = 0, lf10 = 1, dlk = 2, elw1 = 3, rw = 4, gwA = 5, gwOil = 10, gwL2Wasser = 11, gwMess = 12, gwGefahrgut = 27, rtw = 28, nef = 29, hlf20 = 30, fuStW = 32, gwHoehe = 33, elw2 = 34, tsfW = 37, ktw = 38, gkw = 39, mtwTz = 40, mzGw = 41, lkwK9 = 42, brmgr = 43, anhDle = 44, dekonP = 53, kdowLNA = 55, kdowOrgL = 56, fwk = 57, lkw7Lkr19Tm = 65, anhMzB = 66, anhSchlB = 67, anhMzAB = 68, tkw = 69, naw = 74, flf = 75 , tlf4000 = 87, mlf = 89, hlf10 = 90, anhHund = 92, mtwO = 93, dhuUFueKw = 94, zivilstreifenwagen = 98, nea50 = 110, tankwagen = 120, gtlf = 121, mtwOv = 124, all = 65535
+    case lf20 = 0, lf10 = 1, dlk = 2, elw1 = 3, rw = 4, gwA = 5, gwOil = 10, gwL2Wasser = 11, gwMess = 12, gwGefahrgut = 27, rtw = 28, nef = 29, hlf20 = 30, fuStW = 32, gwHoehe = 33, elw2 = 34, tsfW = 37, ktw = 38, gkw = 39, mtwTz = 40, mzGw = 41, lkwK9 = 42, brmgr = 43, anhDle = 44, mlw = 45, dekonP = 53, kdowLNA = 55, kdowOrgL = 56, fwk = 57, lkw7Lkr19Tm = 65, anhMzB = 66, anhSchlB = 67, anhMzAB = 68, tkw = 69, naw = 74, flf = 75 , tlf4000 = 87, mlf = 89, hlf10 = 90, anhHund = 92, mtwO = 93, dhuUFueKw = 94, zivilstreifenwagen = 98, nea50 = 110, tankwagen = 120, gtlf = 121, mtwOv = 124, all = 65535
     public var id: Self { self }
     
     public func asGermanString() -> String {
@@ -59,6 +59,8 @@ public enum VehicleType: UInt16, CaseIterable, Identifiable {
             return "Mannschaftstransportwagen Technischer Zug"
         case .mzGw:
             return "Mehrzweck Gerätewagen (Fachgruppe Notversorgung)"
+        case .mlw:
+            return "MLW 5"
         case .dekonP:
             return "Dekon-P"
         case .kdowLNA:
@@ -159,6 +161,8 @@ public enum VehicleType: UInt16, CaseIterable, Identifiable {
             return "MTW-TZ"
         case .mzGw:
             return "MzGw (Fgr N)"
+        case .mlw:
+            return "MLW 5"
         case .dekonP:
             return "Dekon-P"
         case .kdowLNA:
@@ -221,7 +225,7 @@ public let vehicleTypesPerCategory: [VehicleCategory: [VehicleType]] = [
     VehicleCategory.rs: [.rtw, .nef, .ktw, .kdowLNA, .kdowOrgL, .naw],
     VehicleCategory.pol: [.fuStW, .dhuUFueKw, .zivilstreifenwagen],
     VehicleCategory.bPol: [.fuStW, .dhuUFueKw],
-    VehicleCategory.thw: [.gkw, .mtwTz, .mtwOv, .mzGw, .nea50, .tkw, .lkw7Lkr19Tm, .anhMzB, .anhSchlB, .anhMzAB, .anhDle, .lkwK9, .brmgr, .mtwO, .anhHund]
+    VehicleCategory.thw: [.gkw, .mtwTz, .mtwOv, .mzGw, .nea50, .tkw, .lkw7Lkr19Tm, .anhMzB, .anhSchlB, .anhMzAB, .anhDle, .lkwK9, .brmgr, .mtwO, .anhHund, .mlw]
 ]
 
 public func isVehicleTypeInCategory(_ rawType: UInt16, category: VehicleCategory) -> Bool {

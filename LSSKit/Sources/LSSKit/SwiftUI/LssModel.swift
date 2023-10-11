@@ -69,6 +69,9 @@ public class LssModel: ObservableObject {
                 LssVehicle.preview3,
                 LssVehicle.preview4
             ]
+            missionMarkers = [
+                MissionMarker.preview
+            ]
             creds = FayeCredentials(stripeMid: "", sessionId: "", mcUniqueClientId: "", rememberUserToken: "")
             creds.userId = String(ChatMessage.preview.userId)
         }
@@ -676,6 +679,7 @@ public extension LssModel {
         vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.mzGw }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rTHW_MzGwFGrN)).map { $0.1 })
         vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwOil }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWo)).map { $0.1 })
         vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwHoehe }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWh)).map { $0.1 })
+        vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.tkw }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWtaucher)).map { $0.1 })
         vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.dekonP }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rDekonP)).map { $0.1 })
         vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwL2Wasser }.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rSchlauchwagen)).map { $0.1 })
         vids.insertRange(items: myVehicles.filter { $0.0 == VehicleType.gwGefahrgut}.sorted(by: { $0.2 < $1.2 }).prefix(Int(unitRequirements.rGWg)).map { $0.1 })

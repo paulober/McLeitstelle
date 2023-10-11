@@ -561,6 +561,8 @@ public struct LssRequirements: Codable, Hashable {
             if let thwDle = self.thwDle {
                 return thwDle > 0
             }
+        case .mlw:
+            return false
         }
         
         return false

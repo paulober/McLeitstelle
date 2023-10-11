@@ -20,6 +20,8 @@
 		B142A56E2AA38BC0001B4D9A /* EmergencyCallsTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B142A56D2AA38BC0001B4D9A /* EmergencyCallsTable.swift */; };
 		B142A5742AA3E473001B4D9A /* EmergencyCallDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B142A5732AA3E473001B4D9A /* EmergencyCallDetailsView.swift */; };
 		B1558DC72AC5D0A800BA7E96 /* VehicleTypeRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1558DC62AC5D0A800BA7E96 /* VehicleTypeRow.swift */; };
+		B163DA802AD74A5C00A44690 /* MassiveDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B163DA7F2AD74A5C00A44690 /* MassiveDashboardView.swift */; };
+		B163DA822AD74D0800A44690 /* MissionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B163DA812AD74D0800A44690 /* MissionRow.swift */; };
 		B18FD8FE2AA36FB90094FFBC /* LssKit in Frameworks */ = {isa = PBXBuildFile; productRef = B18FD8FD2AA36FB90094FFBC /* LssKit */; };
 		B19ADC142AA0F6E20013B88C /* McLeitstelleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ADC132AA0F6E20013B88C /* McLeitstelleApp.swift */; };
 		B19ADC162AA0F6E20013B88C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19ADC152AA0F6E20013B88C /* ContentView.swift */; };
@@ -69,6 +71,8 @@
 		B142A56D2AA38BC0001B4D9A /* EmergencyCallsTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallsTable.swift; sourceTree = "<group>"; };
 		B142A5732AA3E473001B4D9A /* EmergencyCallDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmergencyCallDetailsView.swift; sourceTree = "<group>"; };
 		B1558DC62AC5D0A800BA7E96 /* VehicleTypeRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleTypeRow.swift; sourceTree = "<group>"; };
+		B163DA7F2AD74A5C00A44690 /* MassiveDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MassiveDashboardView.swift; sourceTree = "<group>"; };
+		B163DA812AD74D0800A44690 /* MissionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRow.swift; sourceTree = "<group>"; };
 		B19ADC102AA0F6E20013B88C /* McLeitstelle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = McLeitstelle.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B19ADC132AA0F6E20013B88C /* McLeitstelleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = McLeitstelleApp.swift; sourceTree = "<group>"; };
 		B19ADC152AA0F6E20013B88C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -213,6 +217,8 @@
 			children = (
 				B1A3E0672AA11996006CD44D /* DashboardView.swift */,
 				B1B7688E2AACDE360068895A /* RadioMessageRow.swift */,
+				B163DA7F2AD74A5C00A44690 /* MassiveDashboardView.swift */,
+				B163DA812AD74D0800A44690 /* MissionRow.swift */,
 			);
 			path = Dashboard;
 			sourceTree = "<group>";
@@ -396,6 +402,7 @@
 				B1A3E0712AA11C28006CD44D /* VehiclesView.swift in Sources */,
 				B1BED2222AA4A58B0029DE3E /* LoginView.swift in Sources */,
 				B142A56E2AA38BC0001B4D9A /* EmergencyCallsTable.swift in Sources */,
+				B163DA802AD74A5C00A44690 /* MassiveDashboardView.swift in Sources */,
 				B19ADC162AA0F6E20013B88C /* ContentView.swift in Sources */,
 				B1558DC72AC5D0A800BA7E96 /* VehicleTypeRow.swift in Sources */,
 				B19ADC182AA0F6E20013B88C /* Item.swift in Sources */,
@@ -404,6 +411,7 @@
 				B1BED2272AA51CCF0029DE3E /* BuildingsTable.swift in Sources */,
 				B10F2FAB2AA65393000B1741 /* BuildingDetailsViewModel.swift in Sources */,
 				B19ADC272AA0F7D00013B88C /* Sidebar.swift in Sources */,
+				B163DA822AD74D0800A44690 /* MissionRow.swift in Sources */,
 				B19B20642AA8DA990045B84E /* MarkerFilter.swift in Sources */,
 				B142A5742AA3E473001B4D9A /* EmergencyCallDetailsView.swift in Sources */,
 				B19ADC142AA0F6E20013B88C /* McLeitstelleApp.swift in Sources */,

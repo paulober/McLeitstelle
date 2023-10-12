@@ -942,6 +942,7 @@ struct EmergencyCallDetailsView: View {
         }
         
         // TODO: switch these to if no patients but prisoners! on iOS
+        // TODO: prisoner radio is also not disabled for patients because of radioMessages
         Button {
             showPatientsManagementSheet = true
         } label: {

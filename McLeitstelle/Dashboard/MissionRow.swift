@@ -46,6 +46,7 @@ struct MissionRow: View {
                     } label: {
                         Label("Auto-Alarm", systemImage: "clock")
                     }
+                    .background(model.areEnoughVehiclesForMission(mid: mission.id, unitRequirements: missionUnitsRequirement) ? Color.green.opacity(0.6) : Color.red.opacity(0.6))
                 }
                 .padding()
             }

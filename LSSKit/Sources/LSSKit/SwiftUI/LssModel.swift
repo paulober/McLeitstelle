@@ -699,4 +699,112 @@ public extension LssModel {
         // vehicles are automatically updated by missionAlarm after alarming vehicles + delay
         return await self.missionAlarm(missionId: mid, vehicleIds: vids)
     }
+    
+    func areEnoughVehiclesForMission(mid: Int, unitRequirements: MissionUinitsRequirement?) -> Bool {
+        guard let unitRequirements = unitRequirements else {
+            return false
+        }
+        
+        var selectedLfsCount = 0
+        var selectedHlfsCount = 0
+        var waterRequiredCount = 0
+        var otherUnitsCount = 0
+
+        guard let missionCoord = self.missionCoord(mid: mid) else {
+            return false
+        }
+
+        for vehicle in self.vehicles {
+            if let vt = VehicleType(rawValue: vehicle.vehicleType),
+               let c = self.vehicleCord(missionCoord: missionCoord, vehicle: vehicle),
+               c <= 100.0 {
+
+                if vt == .ktw {
+                    return true // Can immediately alarm for Krankentransport
+                }
+
+                if vt == .lf20 && vehicle.fmsShow == FMSStatus.einsatzbereitWache.rawValue {
+                    selectedLfsCount += 1
+                } else if vt == .hlf20 && vehicle.fmsShow == FMSStatus.einsatzbereitWache.rawValue {
+                    selectedHlfsCount += 1
+                } else if vt == .gtlf {
+                    if vehicle.fmsShow == FMSStatus.ankunftAnEinsatz.rawValue {
+                        selectedLfsCount += 1
+                    } else {
+                        waterRequiredCount += 1
+                    }
+                } else {
+                    otherUnitsCount += 1
+                }
+            }
+        }
+
+        // Calculate required LFs
+        var requiredLfsCount = Int(unitRequirements.rLF)
+        let waterRequired = Int(unitRequirements.rWater ?? 0)
+
+        if waterRequired > 0 {
+            let waterLeft = waterRequired - (requiredLfsCount * 2000)
+
+            if waterLeft > 10000 {
+                requiredLfsCount -= 1
+            }
+        }
+
+        // Check if LF requirement is met
+        if requiredLfsCount <= selectedLfsCount {
+            return true
+        }
+
+        // Try to meet the remaining LF requirement with HLFs
+        let remainingLfsCount = requiredLfsCount - selectedLfsCount
+        if remainingLfsCount <= selectedHlfsCount {
+            return true
+        }
+
+        // If requiredLfsCount is still not met, check other available units
+        let remainingUnitsCount = requiredLfsCount - selectedLfsCount - selectedHlfsCount
+
+        if remainingUnitsCount <= otherUnitsCount {
+            return true
+        }
+
+        // Check other vehicle types
+        let requiredUnitTypes: [(UInt16, VehicleType)] = [
+            (unitRequirements.rRW, VehicleType.rw),
+            (unitRequirements.rDLK, VehicleType.dlk),
+            (UInt16(unitRequirements.rELW1), VehicleType.elw1),
+            (UInt16(unitRequirements.rELW2), VehicleType.elw2),
+            (unitRequirements.rGWa, VehicleType.gwA),
+            (unitRequirements.rPol, VehicleType.fuStW),
+            (unitRequirements.rFWK, VehicleType.fwk),
+            (unitRequirements.possiblePatients, VehicleType.rtw),
+            (unitRequirements.rGWm, VehicleType.gwMess),
+            (unitRequirements.rTHW_GKW, VehicleType.gkw),
+            (unitRequirements.rTHW_MtwTz, VehicleType.mtwTz),
+            (unitRequirements.rTHW_MzGwFGrN, VehicleType.mzGw),
+            (unitRequirements.rGWo, VehicleType.gwOil),
+            (unitRequirements.rGWh, VehicleType.gwHoehe),
+            (unitRequirements.rGWtaucher, VehicleType.tkw),
+            (unitRequirements.rDekonP, VehicleType.dekonP),
+            (unitRequirements.rSchlauchwagen, VehicleType.gwL2Wasser),
+            (unitRequirements.rGWg, VehicleType.gwGefahrgut),
+            (unitRequirements.rTHW_BRmGr, VehicleType.brmgr),
+            (unitRequirements.rTHW_LKWk9, VehicleType.lkwK9),
+            //(UInt16(unitRequirements.nefPosibility ?? 0), VehicleType.nef),
+            (unitRequirements.rDhufukw, VehicleType.dhuUFueKw),
+            (unitRequirements.rNEA50, VehicleType.nea50)
+        ]
+
+        for (requiredCount, vehicleType) in requiredUnitTypes {
+            let availableCount = self.vehicles.filter { $0.vehicleType == vehicleType.rawValue && $0.fmsShow == FMSStatus.einsatzbereitWache.rawValue }.count
+            if requiredCount > 0 && requiredCount > availableCount {
+                return false
+            }
+        }
+
+        return true
+    }
+
+
 }

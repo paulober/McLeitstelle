@@ -40,8 +40,10 @@ struct Sidebar: View {
         List(selection: $selection) {
             NavigationLink(value: Panel.dashboard) {
                 Label("Dashboard", systemImage: "magnifyingglass")
+                    .badge(model.radioMessages.filter { $0.userId == model.getUserID() && $0.fms == FMSStatus.sprechwunsch.rawValue }.count)
             }
-            .badge(model.radioMessages.filter { $0.userId == model.getUserID() && $0.fms == FMSStatus.sprechwunsch.rawValue }.count)
+            // Causes navigation to not work for this item
+            //.badge(model.radioMessages.filter { $0.userId == model.getUserID() && $0.fms == FMSStatus.sprechwunsch.rawValue }.count)
             
             NavigationLink(value: Panel.emergencyCalls) {
                 Label("Emergency Calls", systemImage: "phone.down.waves.left.and.right")

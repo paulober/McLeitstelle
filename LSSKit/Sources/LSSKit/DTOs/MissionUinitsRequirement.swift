@@ -178,6 +178,22 @@ public struct MissionUinitsRequirement {
             return rTHW_AnhDle
         case .mlw:
             return 0
+        case .gwWasserrettung:
+            return rGWw
+        case .mlw4:
+            return 0
+        case .thwAnhSwPu:
+            return 0
+        case .thwAnh7:
+            return 0
+        case .mzGwSB:
+            return rMzGwSB
+        case .lkw7LbmFGrWP:
+            return 0
+        case .polMotorrad:
+            return polReplaceableByBikesCount ?? (polMotorbikesCanReplaceCars ?? false ? rPol : 0)
+        case .wlf:
+            return 0
         }
     }
 }

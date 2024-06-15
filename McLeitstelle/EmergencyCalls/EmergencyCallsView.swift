@@ -104,12 +104,33 @@ struct EmergencyCallsView: View {
             }
         }
     }
+    
+    func getMissionDetails() async -> (MissionUinitsRequirement, String, MissionMarker.ID)? {
+        guard let missionId = selection.first, let mission = model.missionMarkers.first(where: {$0.id == missionId}), let missionTypeId = mission.missionTypeId else {
+            return nil
+        }
+        
+        let result = await scanMissionEinsatzHTML(csrfToken: model.getCsrfToken() ?? "", missionTypeId: missionTypeId, missionId: missionId)
+        
+        return (result.scan(), mission.caption, missionId)
+    }
 
     @ViewBuilder
     var toolbarButtons: some View {
         #if os(macOS)
         NavigationLink(value: selection.first) {
             Label("View Details", systemImage: "list.bullet.below.rectangle")
+        }
+        .disabled(selection.isEmpty)
+        
+        Button {
+            Task {
+                if let result = await getMissionDetails() {
+                    _ = await model.autoAlarm(mid: result.2, caption: result.1, unitRequirements: result.0)
+                }
+            }
+        } label: {
+            Label("Auto Alarm", systemImage: "bell")
         }
         .disabled(selection.isEmpty)
         #endif

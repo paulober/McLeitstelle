@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import Darwin
 
 enum LssAPIError: Error {
     case downloadIndexHTMLFailed

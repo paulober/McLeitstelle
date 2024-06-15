@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if os(iOS) || os(macOS)
 import Security
+#endif
 
 internal struct EssentialCredentials: Codable {
     let rememberUserToken: String
@@ -31,6 +33,7 @@ internal func saveCredentials(
     do {
         let data = try JSONEncoder().encode(creds)
         
+        #if os(iOS) || os(macOS)
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: username,
@@ -44,6 +47,7 @@ internal func saveCredentials(
             UserDefaults.standard.set(username, forKey: userDefaultsUsernameKey)
             return true
         }
+        #endif
     } catch {
         return false
     }
@@ -65,6 +69,7 @@ internal func retrieveCredentials() -> (String, EssentialCredentials)? {
 }
 
 internal func retrieveCredentials(forUsername username: String) -> EssentialCredentials? {
+    #if os(iOS) || os(macOS)
     let query: [String: Any] = [
         kSecClass as String: kSecClassGenericPassword,
         kSecAttrAccount as String: username,
@@ -82,6 +87,7 @@ internal func retrieveCredentials(forUsername username: String) -> EssentialCred
             print("[LssKit, retrieveCredentials] Error decoding data")
         }
     }
+    #endif
 
     return nil
 }
@@ -93,12 +99,14 @@ internal func deleteCredentials() -> Bool {
 }
 
 internal func deleteCredentials(for username: String) -> Bool {
+    #if os(iOS) || os(macOS)
     let query: [String: Any] = [
         kSecClass as String: kSecClassGenericPassword,
         kSecAttrAccount as String: username
     ]
     
     let status = SecItemDelete(query as CFDictionary)
+    #endif
     
     return status == noErr
 }
@@ -106,6 +114,7 @@ internal func deleteCredentials(for username: String) -> Bool {
 internal func saveCredentials(username: String, password: String) -> Bool {
     guard let data = password.data(using: .utf8) else { return false }
 
+    #if os(iOS) || os(macOS)
     let query: [String: Any] = [
         kSecClass as String: kSecClassGenericPassword,
         kSecAttrAccount as String: username,
@@ -119,6 +128,7 @@ internal func saveCredentials(username: String, password: String) -> Bool {
         UserDefaults.standard.set(username, forKey: userDefaultsUsernameKey)
         return true
     }
+    #endif
     
     return false
 }
@@ -134,6 +144,7 @@ internal func retrieveUsernameAndPassword() -> (String, String)? {
 }
 
 internal func retrievePassword(forUsername username: String) -> String? {
+    #if os(iOS) || os(macOS)
     let query: [String: Any] = [
         kSecClass as String: kSecClassGenericPassword,
         kSecAttrAccount as String: username,
@@ -148,6 +159,8 @@ internal func retrievePassword(forUsername username: String) -> String? {
             return password
         }
     }
+    #endif
 
     return nil
 }
+

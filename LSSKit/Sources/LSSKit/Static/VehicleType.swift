@@ -11,7 +11,7 @@ public enum VehicleCategory: UInt16, CaseIterable, Identifiable {
 }
 
 public enum VehicleType: UInt16, CaseIterable, Identifiable {
-    case lf20 = 0, lf10 = 1, dlk = 2, elw1 = 3, rw = 4, gwA = 5, gwOil = 10, gwL2Wasser = 11, gwMess = 12, gwGefahrgut = 27, rtw = 28, nef = 29, hlf20 = 30, fuStW = 32, gwHoehe = 33, elw2 = 34, tsfW = 37, ktw = 38, gkw = 39, mtwTz = 40, mzGw = 41, lkwK9 = 42, brmgr = 43, anhDle = 44, mlw = 45, dekonP = 53, kdowLNA = 55, kdowOrgL = 56, fwk = 57, lkw7Lkr19Tm = 65, anhMzB = 66, anhSchlB = 67, anhMzAB = 68, tkw = 69, naw = 74, flf = 75 , tlf4000 = 87, mlf = 89, hlf10 = 90, anhHund = 92, mtwO = 93, dhuUFueKw = 94, zivilstreifenwagen = 98, nea50 = 110, tankwagen = 120, gtlf = 121, mtwOv = 124, all = 65535
+    case lf20 = 0, lf10 = 1, dlk = 2, elw1 = 3, rw = 4, gwA = 5, gwOil = 10, gwL2Wasser = 11, gwMess = 12, gwGefahrgut = 27, rtw = 28, nef = 29, hlf20 = 30, fuStW = 32, gwHoehe = 33, elw2 = 34, tsfW = 37, ktw = 38, gkw = 39, mtwTz = 40, mzGw = 41, lkwK9 = 42, brmgr = 43, anhDle = 44, mlw = 45, wlf = 46, dekonP = 53, kdowLNA = 55, kdowOrgL = 56, fwk = 57, gwWasserrettung = 64, lkw7Lkr19Tm = 65, anhMzB = 66, anhSchlB = 67, anhMzAB = 68, tkw = 69, naw = 74, flf = 75 , tlf4000 = 87, mlf = 89, hlf10 = 90, anhHund = 92, mtwO = 93, dhuUFueKw = 94, polMotorrad = 95, zivilstreifenwagen = 98, mlw4 = 100, thwAnhSwPu = 101, thwAnh7 = 102, mzGwSB = 109, nea50 = 110, tankwagen = 120, gtlf = 121, lkw7LbmFGrWP = 123, mtwOv = 124, all = 65535
     public var id: Self { self }
     
     public func asGermanString() -> String {
@@ -113,6 +113,22 @@ public enum VehicleType: UInt16, CaseIterable, Identifiable {
             return "Tankwagen"
         case .anhDle:
             return "Anhänger Drucklufterzeugung"
+        case .gwWasserrettung:
+            return "GW-Wasserrettung"
+        case .mlw4:
+            return "Mannschaftslastwagen Typ IV mit Ladebordwand"
+        case .thwAnhSwPu:
+            return "Anhänger mit Schmutzwasserkreiselpumpe"
+        case .thwAnh7:
+            return "Anhänger Plane/Spriegel für Nutzlast, 7t"
+        case .mzGwSB:
+            return "Mehrzweck-Gerätewagen (SB)"
+        case .lkw7LbmFGrWP:
+            return "Lastkraftwagen Plane/Spriegel mit Ladebordwand, 7t, Fachgruppe Wasserschaden/Pumpen"
+        case .polMotorrad:
+            return "Polizeimotorrad"
+        case .wlf:
+            return "Wechselladerfahrzeug"
         }
     }
     
@@ -215,17 +231,33 @@ public enum VehicleType: UInt16, CaseIterable, Identifiable {
             return "Tankwagen"
         case .anhDle:
             return "Anh DLE"
+        case .gwWasserrettung:
+            return "GW-Wasser"
+        case .mlw4:
+            return "MLW 4"
+        case .thwAnhSwPu:
+            return "Anh SwPu"
+        case .thwAnh7:
+            return "Anh 7"
+        case .mzGwSB:
+            return "MzGW SB"
+        case .lkw7LbmFGrWP:
+            return "LKW 7 Lbw (FGr WP)"
+        case .polMotorrad:
+            return "Pol Motorrad"
+        case .wlf:
+            return "WLF"
         }
     }
 }
 
 public let vehicleTypesPerCategory: [VehicleCategory: [VehicleType]] = [
-    VehicleCategory.fd: [.lf10, .lf20, .dlk, .rw, .elw1, .gtlf, .mlf, .hlf10, .hlf20, .tsfW, .tlf4000],
-    VehicleCategory.fdSpecial: [.gwL2Wasser, .gwA, .gwMess, .gwOil, .gwGefahrgut, .gwHoehe, .elw2, .fwk, .dekonP, .flf],
+    VehicleCategory.fd: [.lf10, .lf20, .dlk, .rw, .elw1, .gtlf, .mlf, .hlf10, .hlf20, .tsfW, .tlf4000, .wlf],
+    VehicleCategory.fdSpecial: [.gwL2Wasser, .gwA, .gwMess, .gwOil, .gwGefahrgut, .gwHoehe, .elw2, .fwk, .dekonP, .flf, .gwWasserrettung, .tankwagen],
     VehicleCategory.rs: [.rtw, .nef, .ktw, .kdowLNA, .kdowOrgL, .naw],
-    VehicleCategory.pol: [.fuStW, .dhuUFueKw, .zivilstreifenwagen],
+    VehicleCategory.pol: [.fuStW, .dhuUFueKw, .zivilstreifenwagen, .polMotorrad],
     VehicleCategory.bPol: [.fuStW, .dhuUFueKw],
-    VehicleCategory.thw: [.gkw, .mtwTz, .mtwOv, .mzGw, .nea50, .tkw, .lkw7Lkr19Tm, .anhMzB, .anhSchlB, .anhMzAB, .anhDle, .lkwK9, .brmgr, .mtwO, .anhHund, .mlw]
+    VehicleCategory.thw: [.gkw, .mtwTz, .mtwOv, .mzGw, .nea50, .tkw, .lkw7Lkr19Tm, .anhMzB, .anhSchlB, .anhMzAB, .anhDle, .lkwK9, .brmgr, .mtwO, .anhHund, .mlw, .mlw4, .thwAnh7, .thwAnhSwPu, .lkw7LbmFGrWP, .mzGwSB]
 ]
 
 public func isVehicleTypeInCategory(_ rawType: UInt16, category: VehicleCategory) -> Bool {

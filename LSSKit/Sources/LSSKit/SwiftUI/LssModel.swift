@@ -5,6 +5,7 @@
 //  Created by Paul on 02.09.23.
 //
 
+#if os(iOS) || os(macOS)
 import SwiftUI
 import Combine
 
@@ -348,7 +349,7 @@ public class LssModel: ObservableObject {
                         }
                     }
                 }
-                fayeData.deletedPatients.forEach { patientId in                    
+                fayeData.deletedPatients.forEach { patientId in
                     if let idx = self.patientMarkers.firstIndex(where: { $0.id == patientId }) {
                         self.patientMarkers.remove(at: idx)
                     }
@@ -808,3 +809,4 @@ public extension LssModel {
 
 
 }
+#endif

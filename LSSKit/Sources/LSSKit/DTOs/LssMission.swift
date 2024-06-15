@@ -563,6 +563,24 @@ public struct LssRequirements: Codable, Hashable {
             }
         case .mlw:
             return false
+        case .gwWasserrettung:
+            return false
+        case .mlw4:
+            return false
+        case .thwAnhSwPu:
+            return false
+        case .thwAnh7:
+            return false
+        case .mzGwSB:
+            return false
+        case .lkw7LbmFGrWP:
+            return false
+        case .polMotorrad:
+            if let bikePolice = bikePolice {
+                return bikePolice > 0
+            }
+        case .wlf:
+            return false
         }
         
         return false
